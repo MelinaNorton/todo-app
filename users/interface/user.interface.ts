@@ -1,7 +1,7 @@
 import { TodoItemSchema } from "users/schema/listitems.schema"
 import { ToDo } from "./todoitem.interface"
 
-export interface Users {
+export interface User {
     firstname : string,
     lastname : string,
     username : string,

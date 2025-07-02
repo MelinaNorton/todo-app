@@ -4,22 +4,22 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs'
-import { Users } from './interface/users.interface';
+import { User } from './interface/user.interface';
 import { JwtStrategy } from 'auth/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { FilterUserDto } from './dto/filter-user.dto';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
-    @InjectModel('Users') 
-    private readonly usersModel: Model <Users>, 
+    @InjectModel('User') 
+    private readonly usersModel: Model <User>, 
     private jwtService: JwtService, 
     private configService: ConfigService
   ){}
 
-    async create(createUserDto: CreateUserDto):Promise<Users> {
+    async create(createUserDto: CreateUserDto):Promise<User> {
       require('bcrypt')
       const salt = await bcrypt.genSalt(10);
       const securepass = await bcrypt.hash(createUserDto.password, salt)
@@ -31,7 +31,7 @@ export class UsersService {
       return newUser
     }
 
-  async findAll(filter : FilterUserDto): Promise<Users[]> {
+  async findAll(filter : FilterUserDto): Promise<User[]> {
     const defined_fields:FilterUserDto = {}
     if(filter.username != undefined){defined_fields.firstname = filter.username}
     if(filter.lastname != undefined){defined_fields.lastname = filter.lastname}
@@ -40,7 +40,7 @@ export class UsersService {
     return this.usersModel.find(defined_fields).exec();
   }
 
-  async findOne(query : FilterUserDto): Promise<Users> {
+  async findOne(query : FilterUserDto): Promise<User> {
     const found = await this.usersModel.findOne(query)
     if(found){
       return found
