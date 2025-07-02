@@ -25,8 +25,8 @@ export class UsersController {
     return this.usersService.update(query,updateUserDto)
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    
+  @Delete('delete')
+  remove(@Query() query:FilterUserDto) {
+    return this.usersService.remove(query)
   }
 }
