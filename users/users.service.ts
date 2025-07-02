@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -40,8 +40,14 @@ export class UsersService {
     return this.usersModel.find(defined_fields).exec();
   }
 
-  async findOne(query : FilterUserDto) {
-    return this.usersModel.findOne(query)
+  async findOne(query : FilterUserDto): Promise<Users> {
+    const found = await this.usersModel.findOne(query)
+    if(found){
+      return found
+    }
+    else{
+      throw new UnauthorizedException("No User Found")
+    }
   }
 
   async update(query : FilterUserDto, updateUserDto: UpdateUserDto) {
