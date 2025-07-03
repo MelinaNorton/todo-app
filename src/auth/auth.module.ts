@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UserModule } from 'users/user.module';
+import { UserModule } from 'src/users/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { TokenService } from './providers/token.service';
+import { BcryptService } from './providers/bcrypt.service';
 
 @Module({
   imports:[ConfigModule,
@@ -27,6 +29,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       })
     }),],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, TokenService, BcryptService],
 })
 export class AuthModule {}

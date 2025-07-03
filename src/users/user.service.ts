@@ -5,24 +5,21 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt'
 import { User } from './interface/user.interface';
-import { JwtStrategy } from 'auth/strategies/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { FilterUserDto } from './dto/filter-user.dto';
+import { BcryptService } from 'src/auth/providers/bcrypt.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') 
     private readonly usersModel: Model <User>, 
-    private jwtService: JwtService, 
-    private configService: ConfigService
+    private bcryptService:BcryptService
   ){}
 
     async create(createUserDto: CreateUserDto):Promise<User> {
-      require('bcrypt')
-      const salt = await bcrypt.genSalt(10);
-      const securepass = await bcrypt.hash(createUserDto.password, salt)
+      const securepass = this.bcryptService.hashPass(createUserDto.password)
       const newUser = new this.usersModel({
         ...createUserDto,
         password : securepass

@@ -1,12 +1,15 @@
 import { Injectable } from "@nestjs/common"
 import { ConfigService } from "@nestjs/config"
 import { JwtService } from "@nestjs/jwt"
-import { User } from "users/interface/user.interface"
+import { User } from "src/users/interface/user.interface"
 import { Res } from "@nestjs/common"
 import { Response } from 'express';
 
 @Injectable()
 export class TokenService {
+    private readonly tokenname;
+    private readonly secret;
+    private readonly expiry;
     //constructor
     constructor(
         private jwtService: JwtService,
@@ -14,21 +17,21 @@ export class TokenService {
     ){
         //pull in config values for reference (note configService needs to be called within tge constructior, since the code below
         //will) run first before configService is initialized & throw an error
-        const tokenname = 'token'
-        const secret = this.configService.get("JWT_SECRET")
-        const expiry = this.configService.get("JWT_EXPIRES")
+        this.tokenname = 'token'
+        this.secret = this.configService.get("JWT_SECRET")
+        this.expiry = this.configService.get("JWT_EXPIRES")
     }
     //sign function
     async createToken(user:User):Promise<string>{
         const token = await this.jwtService.sign({ id: user._id, username: user.username }, {
-            secret: this.configService.get('JWT_SECRET'),
-            expiresIn: this.configService.get('JWT_EXPIRES'),
+            secret: this.secret,
+            expiresIn: this.expiry,
       })
       return token;
     }
     //attach
     async attatchToken(token:string, @Res({ passthrough: true }) res: Response):Promise<boolean>{
-        res.cookie('token', token, {
+        res.cookie(this.tokenname, token, {
             httpOnly: true,
             secure: false,
             sameSite: 'lax',
@@ -40,7 +43,7 @@ export class TokenService {
 
     //detach
     async detatchToken(@Res({ passthrough: true }) res: Response):Promise<boolean>{
-        res.clearCookie('token', {
+        res.clearCookie(this.tokenname, {
             httpOnly: true,
             secure: false,
             sameSite: 'lax',
