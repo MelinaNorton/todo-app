@@ -1,5 +1,5 @@
 import { TodoItemSchema } from "../schema/listitems.schema"
-import { ToDo } from "./todoitem.interface"
+import { ToDo } from "../todolist/interfaces/todoitem.interface"
 
 export interface User {
     firstname : string,

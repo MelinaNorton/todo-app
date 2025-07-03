@@ -23,4 +23,8 @@ export class FilterUserDto {
     @IsOptional()
     @IsString()
     email? :string
+
+    @IsOptional()
+    @IsString()
+    _id? :string
 }

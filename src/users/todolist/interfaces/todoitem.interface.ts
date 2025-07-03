@@ -1,4 +1,5 @@
 export interface ToDo {
     text :string,
-    done :boolean
+    done :boolean,
+    id : string,
 }
