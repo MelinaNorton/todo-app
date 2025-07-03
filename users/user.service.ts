@@ -33,7 +33,8 @@ export class UserService {
 
   async findAll(filter : FilterUserDto): Promise<User[]> {
     const defined_fields:FilterUserDto = {}
-    if(filter.username != undefined){defined_fields.firstname = filter.username}
+    if(filter.firstname != undefined){defined_fields.firstname = filter.firstname}
+    if(filter.username != undefined){defined_fields.username = filter.username}
     if(filter.lastname != undefined){defined_fields.lastname = filter.lastname}
     if(filter.email != undefined){defined_fields.email = filter.email}
     if(filter.items != undefined){defined_fields.items = filter.items}
