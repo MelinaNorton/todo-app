@@ -8,6 +8,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt'
 import { TokenService } from './providers/token.service';
 import { BcryptService } from './providers/bcrypt.service';
+import { User } from 'src/users/interface/user.interface';
 
 @Injectable()
 export class AuthService {
@@ -22,19 +23,22 @@ export class AuthService {
     return this.userService.create(createAuthDto);
   }
 
-  async login(loginAuthoDto : Login):Promise<string> {
-    const username = loginAuthoDto.username
+  async validate(loginAuthDto: Login):Promise<User>{
+    const username = loginAuthDto.username
     const exists = await this.userService.findOne({username})
     if(!exists){
-      throw new UnauthorizedException('Invalid Credentials');
+      throw new UnauthorizedException('Invalid Username');
     }
-    const match = this.bcryptService.comparePasswords(loginAuthoDto.password, exists.password)
-    if(match){
-      const token = await this.tokenService.createToken(exists)
-      return token;
+    const match = this.bcryptService.comparePasswords(loginAuthDto.password, exists.password)
+    if(!match){
+      throw new UnauthorizedException('Invalid Password');
     }
-    else{
-      throw new UnauthorizedException("Passwords do not match")
-    }
+    return exists
+  }
+
+  async login(loginAuthoDto : Login):Promise<string> {
+    const exists = await this.validate(loginAuthoDto)
+    const token = await this.tokenService.createToken(exists)
+    return token;
   }
 }
