@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt'
 import { User } from './interface/user.interface';
-import { JwtStrategy } from 'auth/jwt.strategy';
+import { JwtStrategy } from 'auth/strategies/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { FilterUserDto } from './dto/filter-user.dto';

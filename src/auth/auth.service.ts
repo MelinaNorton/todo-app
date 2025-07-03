@@ -6,8 +6,6 @@ import { UserService } from 'users/user.service';
 import { ConfigService } from '@nestjs/config';
 import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt'
-import { log } from 'node:util';
-import { User } from 'users/interface/user.interface';
 
 @Injectable()
 export class AuthService {
