@@ -1,4 +1,6 @@
 import {IsString, IsInt, IsBoolean, Min, Max, IsOptional, IsArray} from "@nestjs/class-validator";
+import { ToDo } from "users/interface/todoitem.interface";
+
 export class CreateUserDto {
     @IsString()
     firstname : string
@@ -13,7 +15,7 @@ export class CreateUserDto {
     password : string
 
     @IsArray()
-    items : Array<string>
+    items : Array<ToDo>
 
     @IsString()
     email :string

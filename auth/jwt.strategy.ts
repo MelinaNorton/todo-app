@@ -5,16 +5,11 @@ import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 
 const CookieExtractor = (req : Request): string | null =>{
-    if(!req || !req.cookies){
+    if(!req?.cookies){
         console.error("No Request recieved from CookieExtractor @/auth/jwt.strategy.ts")
         return null;
     }
-    const token = req['token'];
-    if(!token){
-        console.error("No Token available on request from CookieExtractor @/auth/jwt.strategy.ts")
-        return null;
-    }
-    return token;
+   return req.cookies['token'] ?? null;
 }
 
 @Injectable()

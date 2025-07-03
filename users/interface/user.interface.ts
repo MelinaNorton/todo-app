@@ -6,6 +6,7 @@ export interface User {
     lastname : string,
     username : string,
     password : string,
-    items : ToDo[]
-    email : string
+    items : ToDo[],
+    email : string,
+    _id: string
 }
