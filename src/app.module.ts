@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserModule } from 'users/user.module';
+import { UserModule } from './users/user.module';
 import { PassportModule } from '@nestjs/passport';
-import { AuthModule } from 'auth/auth.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [

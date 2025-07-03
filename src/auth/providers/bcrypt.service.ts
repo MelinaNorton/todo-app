@@ -13,6 +13,6 @@ export class BcryptService {
     }
 
     comparePasswords(password:string, checkPassword:string):boolean{
-        return bcrypt.comparePasswords(password, checkPassword)
+        return bcrypt.compare(password, checkPassword)
     }
 }

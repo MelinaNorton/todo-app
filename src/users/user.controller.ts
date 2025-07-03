@@ -1,14 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, HttpCode} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FilterUserDto } from './dto/filter-user.dto';
-import { JwtAuthGuard } from 'auth/guards/jwt.authguard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.authguard';
 
 @Controller('User')
 export class UsersController {
   constructor(private readonly usersService: UserService) {}
 
+  @HttpCode(201)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);

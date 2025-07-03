@@ -1,4 +1,4 @@
-import { TodoItemSchema } from "users/schema/listitems.schema"
+import { TodoItemSchema } from "../schema/listitems.schema"
 import { ToDo } from "./todoitem.interface"
 
 export interface User {

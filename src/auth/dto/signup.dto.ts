@@ -1,6 +1,6 @@
 import {IsString, IsInt, IsBoolean, Min, Max, IsOptional, IsArray} from "@nestjs/class-validator";
-import { ToDo } from "users/interface/todoitem.interface";
-import { TodoItemSchema } from "users/schema/listitems.schema";
+import { ToDo } from "src/users/interface/todoitem.interface";
+import { TodoItemSchema } from "src/users/schema/listitems.schema";
 
 export class Signup {
     @IsString()
