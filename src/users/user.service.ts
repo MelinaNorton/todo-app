@@ -54,6 +54,6 @@ export class UserService {
   }
 
   async remove(query: FilterUserDto) {
-    return this,this.usersModel.findOneAndDelete(query)
+    return this.usersModel.findOneAndDelete(query)
   }
 }
