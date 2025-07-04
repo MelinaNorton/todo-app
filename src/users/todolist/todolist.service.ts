@@ -47,7 +47,7 @@ export class ToDoListService {
         return user[0].items
     }
 
-    //add one item
+    //update one item
     async updateItem(filterUserDto:FilterUserDto, item_id : string, update: UpdateToDoItemDto){
         const filter = {_id : filterUserDto, 'items._id': item_id}
         const setItemOps: Record<string,any> = {}
@@ -91,6 +91,22 @@ export class ToDoListService {
             throw new NotFoundException("Item or User not found for deletion")
         }
         return deleted
+    }
+    //add new item
+    async addItem(filterUserDto:FilterUserDto, createToDo : CreateToDoItemDto){
+        const filter = {_id : filterUserDto._id}
+        const update = {$push : { items: createToDo }}
+
+        const created = await this.userModel.findOneAndUpdate(
+            filter,
+            update,
+            {new : true, projection: { items: { $slice: -1 }}}
+        ).exec()
+
+        if(!created?.items?.length){
+            throw new NotFoundException("User for update not found")
+        }
+        return created
     }
     //delete all items done==false
 }
