@@ -4,6 +4,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FilterUserDto } from './dto/filter-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.authguard';
+import { UsePipes } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 
 @Controller('User')
 export class UsersController {

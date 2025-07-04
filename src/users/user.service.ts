@@ -40,7 +40,12 @@ export class UserService {
   }
 
   async findOne(query : FilterUserDto): Promise<User> {
-    const found = await this.usersModel.findOne(query)
+    const filter = {}
+    if(query._id){filter['_id'] = query._id}
+    if(query.username){filter['username'] = query.username}
+    if(query.firstname){filter['firstname'] = query.firstname}
+    if(query.lastname){filter['lastname'] = query.lastname}
+    const found = await this.usersModel.findOne(filter)
     if(found){
       return found
     }
@@ -50,10 +55,17 @@ export class UserService {
   }
 
   async update(query : FilterUserDto, updateUserDto: UpdateUserDto) {
-    return this.usersModel.findOneAndUpdate(query, updateUserDto, {new : true})
+    console.log(updateUserDto)
+    const filter = {}
+    if(query._id){filter['_id'] = query._id}
+    if(query.username){filter['username'] = query.username}
+    return this.usersModel.findOneAndUpdate(filter, updateUserDto, {new : true})
   }
 
   async remove(query: FilterUserDto) {
-    return this.usersModel.findOneAndDelete(query)
+    const filter = {}
+    if(query._id){filter['_id'] = query._id}
+    if(query.username){filter['username'] = query.username}
+    return this.usersModel.findOneAndDelete(filter)
   }
 }

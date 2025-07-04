@@ -80,11 +80,11 @@ export class ToDoListService {
     }
     //delete one itel by id
     async deleteItem(filterUserDto:FilterUserDto, item_id : string){
-        const filter = {_id : filterUserDto, 'items._id': item_id}
+        const filter = {_id : filterUserDto._id}
 
-        const deleted = await this.userModel.findOne(
+        const deleted = await this.userModel.updateOne(
             filter,
-            { $pull: { items: { _id: item_id } } }
+            { $pull: { items: { _id: item_id } } } 
         ).exec()
 
         if(!deleted){
