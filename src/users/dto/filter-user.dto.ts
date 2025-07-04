@@ -1,4 +1,7 @@
-import {IsString, IsInt, IsBoolean, Min, Max, IsOptional, IsArray} from "@nestjs/class-validator";
+import {IsString, IsInt, IsBoolean, Min, Max, IsOptional, IsArray, ValidateNested} from "@nestjs/class-validator";
+import { FilterToDoItemDto } from "../todolist/dtos/filtertodolist.dto";
+import { Type } from "class-transformer";
+
 export class FilterUserDto {
     @IsOptional()
     @IsString()
@@ -17,14 +20,14 @@ export class FilterUserDto {
     password? : string
 
     @IsOptional()
-    @IsArray()
-    items? : Array<string>
-
-    @IsOptional()
     @IsString()
     email? :string
 
     @IsOptional()
     @IsString()
     _id? :string
+
+    @ValidateNested({ each: true })
+    @Type(() => FilterToDoItemDto)
+    items?: FilterToDoItemDto[];
 }

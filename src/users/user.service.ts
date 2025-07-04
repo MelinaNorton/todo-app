@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { FilterUserDto } from './dto/filter-user.dto';
 import { BcryptService } from 'src/auth/providers/bcrypt.service';
+import { FilterQuery, ProjectionType } from 'mongoose';
 
 @Injectable()
 export class UserService {
@@ -28,14 +29,14 @@ export class UserService {
       return newUser
     }
 
-  async findAll(filter : FilterUserDto): Promise<User[]> {
+  async findAll(filter : FilterUserDto, projection?: ProjectionType<User>): Promise<User[]> {
     const defined_fields:FilterUserDto = {}
     if(filter.firstname != undefined){defined_fields.firstname = filter.firstname}
     if(filter.username != undefined){defined_fields.username = filter.username}
     if(filter.lastname != undefined){defined_fields.lastname = filter.lastname}
     if(filter.email != undefined){defined_fields.email = filter.email}
     if(filter.items != undefined){defined_fields.items = filter.items}
-    return this.usersModel.find(defined_fields).exec();
+    return this.usersModel.find(defined_fields, projection).exec();
   }
 
   async findOne(query : FilterUserDto): Promise<User> {

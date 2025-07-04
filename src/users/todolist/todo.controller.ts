@@ -1,5 +1,4 @@
 import { Controller } from "@nestjs/common";
-import { FilterToDoItemDto } from "./dtos/filter-todolistitem.dto";
 import { FilterUserDto } from "../dto/filter-user.dto";
 import { Query, Get } from "@nestjs/common";
 import { ToDoListService } from "./todolist.service";
@@ -8,8 +7,9 @@ export class ToDoController {
     constructor(
         private readonly toDoListService: ToDoListService,
     ) {}
+
     @Get('item')
-    async findAll(listQuery:FilterToDoItemDto){
-        return await this.toDoListService.getItem(listQuery)
+    async findItems( @Query('_id') filter:FilterUserDto, @Query('item_id') item_id:string){
+        return await this.toDoListService.getItem({ _id: filter._id }, item_id)
     }
 }

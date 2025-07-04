@@ -1,5 +1,7 @@
+import { Types } from "mongoose";
+
 export interface ToDo {
     text :string,
     done :boolean,
-    id : string,
+    _id : Types.ObjectId,
 }
