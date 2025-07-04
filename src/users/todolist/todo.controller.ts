@@ -1,6 +1,6 @@
 import { Controller } from "@nestjs/common";
 import { FilterUserDto } from "../dto/filter-user.dto";
-import { Query, Get, Patch, Body } from "@nestjs/common";
+import { Query, Get, Patch, Body, Delete } from "@nestjs/common";
 import { ToDoListService } from "./todolist.service";
 import { UpdateToDoItemDto } from "./dtos/update-todolistdto";
 
@@ -23,5 +23,10 @@ export class ToDoController {
     @Patch('item')
     async updateItem(@Query() filter:FilterUserDto, @Query('item_id') item_id:string, @Body() update: UpdateToDoItemDto){
         return await this.toDoListService.updateItem({_id : filter._id}, item_id, update)
+    }
+
+    @Delete('item')
+    async deleteItem(@Query() filter:FilterUserDto, @Query('item_id') item_id:string){
+        return await this.toDoListService.deleteItem(filter, item_id)
     }
 }

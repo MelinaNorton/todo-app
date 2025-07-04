@@ -2,17 +2,17 @@ import * as bcrypt from 'bcrypt'
 require('bcrypt')
 
 export class BcryptService {
-    private readonly salt;
+    private readonly rounds = 10
     constructor(){
-        this.salt = bcrypt.genSalt(10)
     }
 
     async hashPass(password:string):Promise<string>{
-        const securepass = await bcrypt.hash(password, this.salt)
+        const salt = await bcrypt.genSalt(this.rounds)
+        const securepass = await bcrypt.hash(password, salt)
         return securepass
     }
 
-    comparePasswords(password:string, checkPassword:string):boolean{
+    async comparePasswords(password:string, checkPassword:string):Promise<boolean>{
         return bcrypt.compare(password, checkPassword)
     }
 }

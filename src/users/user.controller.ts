@@ -19,8 +19,8 @@ export class UsersController {
   // no need for separate routes
   @UseGuards(JwtAuthGuard)
   @Get('get')
-  findAll(@Query() query:FilterUserDto) {
-    return this.usersService.findAll(query);
+  async findAll(@Query() query:FilterUserDto) {
+    return await this.usersService.findAll(query);
   }
 
   //patch any contingency- multiple changes, one, or none (uses findOne, so only changes 1)

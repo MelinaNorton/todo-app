@@ -20,7 +20,7 @@ export class UserService {
   ){}
 
     async create(createUserDto: CreateUserDto):Promise<User> {
-      const securepass = this.bcryptService.hashPass(createUserDto.password)
+      const securepass = await this.bcryptService.hashPass(createUserDto.password)
       const newUser = new this.usersModel({
         ...createUserDto,
         password : securepass

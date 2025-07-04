@@ -79,5 +79,18 @@ export class ToDoListService {
         return user
     }
     //delete one itel by id
+    async deleteItem(filterUserDto:FilterUserDto, item_id : string){
+        const filter = {_id : filterUserDto, 'items._id': item_id}
+
+        const deleted = await this.userModel.findOne(
+            filter,
+            { $pull: { items: { _id: item_id } } }
+        ).exec()
+
+        if(!deleted){
+            throw new NotFoundException("Item or User not found for deletion")
+        }
+        return deleted
+    }
     //delete all items done==false
 }
