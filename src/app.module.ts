@@ -6,6 +6,8 @@ import { UserModule } from './users/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from './auth/auth.module';
 
+//defines the MongoDB connectuon uri & registers jwt as our PassPort middleware's strategy; also aknowledges the other main
+//modules within our progran, User & Auth and the App controller/provider
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb+srv://linamelina0707:gfnmEAPfyM3BlMMJ@cluster0.gqer0il.mongodb.net/ToDoDB?retryWrites=true&w=majority'),
