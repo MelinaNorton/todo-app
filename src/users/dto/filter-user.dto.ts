@@ -1,5 +1,5 @@
 import {IsString, IsInt, IsBoolean, Min, Max, IsOptional, IsArray, ValidateNested} from "@nestjs/class-validator";
-import { FilterToDoItemDto } from "../todolist/dtos/filtertodolist.dto";
+import { FilterToDoItemDto } from "../../list/dto/filtertodoitem.dto";
 import { Type } from "class-transformer";
 
 export class FilterUserDto {
@@ -27,7 +27,7 @@ export class FilterUserDto {
     @IsString()
     _id? :string
 
-    @ValidateNested({ each: true })
+    /*@ValidateNested({ each: true })
     @Type(() => FilterToDoItemDto)
-    items?: FilterToDoItemDto[];
+    items?: FilterToDoItemDto[];*/
 }

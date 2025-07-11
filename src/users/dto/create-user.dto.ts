@@ -1,6 +1,6 @@
 import { IsString, IsArray, IsOptional } from 'class-validator';
-import { CreateToDoItemDto } from '../todolist/dtos/create-todoitem.dto';
-import { ToDo } from "../todolist/interfaces/todoitem.interface";
+import { CreateToDoItemDto } from '../../list/dto/create-todoitem.dto';
+import { ToDo } from "../../list/interface/todoitem.interface";
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 
@@ -17,11 +17,10 @@ export class CreateUserDto {
     @IsString()
     password : string
 
-    @IsArray()
-    @Type(() => CreateToDoItemDto) 
-    @ValidateNested({ each: true })
-    items : CreateToDoItemDto[]
-
     @IsString()
     email :string
+
+    @IsOptional()
+    @IsString()
+    image? :string
 }

@@ -6,7 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { JwtStrategy } from './strategies/jwt.strategy';
+import { JwtRefreshStrategy } from './strategies/jwt.refreshStrategy';
 import { TokenService } from './providers/token.service';
 import { BcryptService } from './providers/bcrypt.service';
 
@@ -29,6 +29,6 @@ import { BcryptService } from './providers/bcrypt.service';
       })
     }),],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, TokenService, BcryptService],
+  providers: [AuthService, JwtRefreshStrategy, TokenService, BcryptService],
 })
 export class AuthModule {}

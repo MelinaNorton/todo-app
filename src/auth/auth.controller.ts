@@ -27,9 +27,12 @@ export class AuthController {
   @HttpCode(200)
   @Post('login')
   async login(@Body() loginAuthDto:Login, @Res({ passthrough: true }) res: Response){
-    const token = await this.authService.login(loginAuthDto)
+    console.log("Ran at Backend controller, /auth.controller")
+    const {token, exists} = await this.authService.login(loginAuthDto)
+    console.log("Ran after initial login service authService.login")
     await this.tokenService.attatchToken(token, res)
-    return { success: true };
+    console.log('>> Set-Cookie header:', res.getHeader('Set-Cookie'));
+    return exists;
   }
 
 //performs logout logic, bu passing the Response object to have it's auth-token detatched

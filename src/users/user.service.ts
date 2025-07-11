@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -33,6 +33,28 @@ export class UserService {
     return newUser
   }
 
+//builds the appropriate url from with the served image can be accessed, and sends that "src" to the user's document
+//as a string to be pulled for rendering
+async upload(usr_id:string, imgFile:string, update:UpdateUserDto){
+  const port = parseInt(process.env.PORT ?? '3000', 10);
+    const url = "http://localhost:" + port + imgFile;
+    const updated = {
+      ...update,
+      image : url,
+    }
+    console.log("Update To Be: ", updated)
+    console.log("image URL: ", url)
+    const changed = await this.usersModel.findOneAndUpdate(
+      { _id: usr_id },
+      { $set: updated },      
+      { new: true } 
+    );
+    if (!changed){
+      throw new NotFoundException("Image did NOT upload :(");
+    }
+    return changed
+}
+
 //takes in a FilterUserDto, and uses the defined fields to call the MongooseModel's function, find(). Should no field
 //be populated, find() will be called with no arguments & all documents will be returned
   async findAll(filter : FilterUserDto): Promise<User[]> {
@@ -41,6 +63,9 @@ export class UserService {
     if(filter.username != undefined){defined_fields.username = filter.username}
     if(filter.lastname != undefined){defined_fields.lastname = filter.lastname}
     if(filter.email != undefined){defined_fields.email = filter.email}
+    if(filter._id != undefined){defined_fields._id = filter._id}
+    console.log("Param Filter: ", filter)
+    console.log("Defined Fields: ",defined_fields)
     return this.usersModel.find(defined_fields).exec();
   }
 

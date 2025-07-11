@@ -2,14 +2,14 @@ import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto';
 import { IsOptional, IsArray, ValidateNested, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CreateToDoItemDto } from '../todolist/dtos/create-todoitem.dto';
+import { CreateToDoItemDto } from '../../list/dto/create-todoitem.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
-    @IsOptional()
+    /*@IsOptional()
     @IsArray()
     @Type(() => CreateToDoItemDto)
     @ValidateNested({ each: true })
-    items?: CreateToDoItemDto[];
+    items?: CreateToDoItemDto[];*/
 
     @IsOptional()
     @IsString()
@@ -30,4 +30,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     @IsOptional()
     @IsString()
     email? :string
+
+    @IsOptional()
+    @IsString()
+    image?: string
 }

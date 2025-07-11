@@ -26,10 +26,12 @@ export class AuthService {
 //our BcryptService)
   async validate(loginAuthDto: Login):Promise<User>{
     const username = loginAuthDto.username
+    console.log("Ran before findOne")
     const exists = await this.userService.findOne({username})
     if(!exists){
       throw new UnauthorizedException('Invalid Username');
     }
+    console.log("Ran before bcrypt")
     const match = this.bcryptService.comparePasswords(loginAuthDto.password, exists.password)
     if(!match){
       throw new UnauthorizedException('Invalid Password');
@@ -39,9 +41,12 @@ export class AuthService {
 
 //carry out our login data using our afformentioned validate() helper-function, and then our TokenService's createToken\
 //funcrion to attatch our successfully authenticated user's session with the token needed to access certain endpoints
-  async login(loginAuthoDto : Login):Promise<string> {
+  async login(loginAuthoDto : Login):Promise<{token:string, exists:User}> {
+    console.log("Ran before validation-line")
     const exists = await this.validate(loginAuthoDto)
+    console.log("Ran before create-Token line")
     const token = await this.tokenService.createToken(exists)
-    return token;
+    console.log("Ran before return")
+    return {token, exists};
   }
 }

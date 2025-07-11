@@ -34,12 +34,12 @@ export class TokenService {
     }
 
 //actual logic for attaching the above-created token to the Response object with our desired parameters
-    async attatchToken(token:string, @Res({ passthrough: true }) res: Response):Promise<boolean>{
+    async attatchToken(token:string, res: Response):Promise<boolean>{
         res.cookie(this.tokenname, token, {
             httpOnly: true,
-            secure: false,
-            sameSite: 'lax',
-            maxAge: 1000 * 60 * 60,
+            secure: true,
+            sameSite: 'none',
+            maxAge: 3600 * 1000,
             path: '/',
         });
         return true;
@@ -47,11 +47,11 @@ export class TokenService {
 
 //detach the authenticated token on logout, again using the Response object
     async detatchToken(@Res({ passthrough: true }) res: Response):Promise<boolean>{
+        console.log("RAN!")
         res.clearCookie(this.tokenname, {
             httpOnly: true,
-            secure: false,
-            sameSite: 'lax',
-            maxAge: 1000 * 60 * 60,
+            secure: true,
+            sameSite: 'none',
             path: '/',
         })
         return true
