@@ -5,7 +5,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User } from './interface/user.interface';
 import { userSchema } from './schema/users.schema';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule } from '@nestjs/config';
 import { BcryptService } from 'src/auth/providers/bcrypt.service';
 import { ListService } from 'src/list/list.service';
 import { ListModule } from 'src/list/list.module';
@@ -16,8 +15,7 @@ import { forwardRef } from '@nestjs/common';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: "User", schema: userSchema }]),
-    JwtModule,  
-    ConfigModule, 
+    JwtModule,   
   ],
   controllers: [UsersController],
   providers: [UserService, BcryptService],

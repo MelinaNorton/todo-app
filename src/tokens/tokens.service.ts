@@ -1,13 +1,18 @@
-import { Injectable } from "@nestjs/common"
+import { Injectable, NotFoundException } from "@nestjs/common"
 import { ConfigService } from "@nestjs/config"
 import { JwtService } from "@nestjs/jwt"
 import { User } from "src/users/interface/user.interface"
 import { Res } from "@nestjs/common"
 import { Response } from 'express';
 import { randomUUID } from 'crypto';
+import { InjectModel } from "@nestjs/mongoose"
+import { Model } from "mongoose"
+import { CreateTokenDto } from "./dto/create-token.dto"
+import { UnauthorizedException } from "@nestjs/common"
+import { Token } from "./interface/tokens.interface"
 
 @Injectable()
-export class TokenService {
+export class TokensService {
     private readonly refreshtokenname;
     private readonly refreshsecret;
     private readonly refreshexpiry;
@@ -18,7 +23,9 @@ export class TokenService {
 //constructor defining our instances of JwtService & ConfigService for later use
     constructor(
         private jwtService: JwtService,
-        private configService: ConfigService 
+        private configService: ConfigService,
+        @InjectModel('Token') 
+        private readonly tokensModel: Model <Token>
     ){
 
 //pull in config values for reference (note configService needs to be called within tge constructior, since the code below
@@ -31,11 +38,17 @@ export class TokenService {
         this.accessexpiry = this.configService.get("JWT_ACCESS_EXPIRES")
     }
 
+    async create(createTokenDto: CreateTokenDto):Promise<Token> {
+        const newToken = new this.tokensModel(createTokenDto)  
+        await newToken.save()
+        return newToken
+      }
 //sign function for craeting our authenticated user with the token needed to access certain endpoints via jwtService's
 //sign() function & the .env values pulled using configService
     async createToken(user:User):Promise<string>{
         const jti = randomUUID()
-        const token = await this.jwtService.sign({ sub: user._id, username: user.username, type:"refresh" , jti}, {
+        console.log(this.refreshsecret)
+        const token = await this.jwtService.sign({ sub: user._id, username: user.username, type:"refresh" , jti: jti}, {
             secret: this.refreshsecret,
             expiresIn: this.refreshexpiry,
       })
@@ -73,23 +86,36 @@ export class TokenService {
         return true
     }
 
-    /*async validateRefreshToken(token:string):Promise<string>{
+    async validateRefreshToken(token:string):Promise<string>{
         const decodedToken = await this.jwtService.verifyAsync<{sub:string, username:string, type:string, jti:string}>(
         token,
         {secret: this.refreshsecret}
         )
         if(decodedToken.type != "refresh"){
-            throw new UnauthorizedError("Attempted to use an access token as a refresh token")
+            throw new UnauthorizedException("Attempted to use an access token as a refresh token")
         }
         //find the jti in mongodb
-        return decodedToken
-    }*/
+        return token
+    }
 
-    /*async validateAccessToken(token:string):Promise<strinng>{
+    async validateAccessToken(token:string):Promise<string>{
         const decodedToken = await this.jwtService.verifyAsync<{sub:string, username:string, type:string, jti:string}>(
         token,
         {secret: this.refreshsecret}
         )
-        return decodedToken
-    }*/
+        return token
+    }
+
+    async revokeRefreshToken(jti:string):Promise<string>{
+        const revoked = this.tokensModel.findOneAndDelete({jti:jti})
+        return jti
+    }
+
+    async findOne(jti:string):Promise<boolean>{
+        const found = this.tokensModel.findOne({jti:jti})
+        if(!found){
+            throw new NotFoundException("Refresh Token Missing or Revoked")
+        }
+        return true
+    }
 }

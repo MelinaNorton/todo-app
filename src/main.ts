@@ -9,6 +9,7 @@ import * as cookieParser from 'cookie-parser';
 //and hooks our Validation Pipe into our middleware (whitelist->only decorated (type-defined DTOs aknowledged transform->
 //apply our defined type-conversions & converts incoming JSON->instane of the DTO class)
 async function bootstrap() {
+  console.log(process.env)
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
   app.enableCors({

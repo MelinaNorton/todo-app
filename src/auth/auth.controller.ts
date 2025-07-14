@@ -1,18 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Login } from './dto/login.dto';
 import { Signup } from './dto/signup.dto';
 import { Res } from '@nestjs/common';
 import { Response } from 'express';
-import { TokenService } from './providers/token.service';
-
+import { TokensService } from 'src/tokens/tokens.service';
+import { Request} from 'express'
 //define our authService as a private variable for use within the controller, but also an instance of TokenService 
 //(which handles all operations/actions taken involving jwt)
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly tokenService: TokenService
+    private readonly tokensService: TokensService
   ) {}
 
 //performs our user-signup/creation via our DTO defined in the body 
@@ -26,19 +26,16 @@ export class AuthController {
 //http-only cookie
   @HttpCode(200)
   @Post('login')
-  async login(@Body() loginAuthDto:Login, @Res({ passthrough: true }) res: Response){
+  async login(@Body() loginAuthDto:Login, @Res({ passthrough: true }) res: Response, @Req() req: Request){
     console.log("Ran at Backend controller, /auth.controller")
-    const {token, exists} = await this.authService.login(loginAuthDto)
-    console.log("Ran after initial login service authService.login")
-    await this.tokenService.attatchToken(token, res)
-    console.log('>> Set-Cookie header:', res.getHeader('Set-Cookie'));
-    return exists;
+    const token = await this.authService.login(loginAuthDto, res, req)
+    return token;
   }
 
 //performs logout logic, bu passing the Response object to have it's auth-token detatched
   @HttpCode(204)
   @Post('logout')
   async logout(@Res({ passthrough: true }) res: Response){
-    this.tokenService.detatchToken(res)
+    this.tokensService.detatchToken(res)
   }
 }

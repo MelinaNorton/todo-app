@@ -2,24 +2,21 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UserModule } from 'src/users/user.module';
-import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { JwtRefreshStrategy } from './strategies/jwt.refreshStrategy';
-import { TokenService } from './providers/token.service';
+import { JwtRefreshStrategy } from '../tokens/strategies/jwt.refreshStrategy';
 import { BcryptService } from './providers/bcrypt.service';
+import { TokensService } from 'src/tokens/tokens.service';
+import { TokensModule } from 'src/tokens/tokens.module';
 
 @Module({
-  imports:[ConfigModule,
+  imports:[
     UserModule,
-    ConfigModule.forRoot({
-        isGlobal: true,
-        envFilePath: `./app.env`
-      }),
+    TokensModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
-      imports: [ConfigModule, UserModule],
+      imports: [UserModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
           secret: config.get<string>('JWT_SECRET'),
@@ -29,6 +26,6 @@ import { BcryptService } from './providers/bcrypt.service';
       })
     }),],
   controllers: [AuthController],
-  providers: [AuthService, JwtRefreshStrategy, TokenService, BcryptService],
+  providers: [AuthService, BcryptService],
 })
 export class AuthModule {}

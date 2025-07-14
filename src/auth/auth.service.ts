@@ -3,15 +3,16 @@ import { Login } from './dto/login.dto';
 import { Signup } from './dto/signup.dto';
 import { UserService } from 'src/users/user.service';
 import { UnauthorizedException } from '@nestjs/common';
-import { TokenService } from './providers/token.service';
+import { TokensService } from 'src/tokens/tokens.service';
 import { BcryptService } from './providers/bcrypt.service';
 import { User } from 'src/users/interface/user.interface';
-
+import { Res, Req } from '@nestjs/common';
+import { Response, Request } from 'express';
 //defines instances of TokenService, BcryptService, and UserService to carry outh authentication logic
 @Injectable()
 export class AuthService {
   constructor(
-        private tokenService: TokenService,
+        private tokensService: TokensService,
         private bcryptService : BcryptService,
         private userService: UserService,
   ) { }
@@ -41,12 +42,15 @@ export class AuthService {
 
 //carry out our login data using our afformentioned validate() helper-function, and then our TokenService's createToken\
 //funcrion to attatch our successfully authenticated user's session with the token needed to access certain endpoints
-  async login(loginAuthoDto : Login):Promise<{token:string, exists:User}> {
-    console.log("Ran before validation-line")
+  async login(loginAuthoDto : Login, @Res({ passthrough: true }) res: Response, @Req() req: Request):Promise<string> {
     const exists = await this.validate(loginAuthoDto)
-    console.log("Ran before create-Token line")
-    const token = await this.tokenService.createToken(exists)
-    console.log("Ran before return")
-    return {token, exists};
+    const existing = req.cookies['refreshtoken']
+    if(existing){
+      this.tokensService.validateRefreshToken(existing)
+      this.tokensService.revokeRefreshToken(existing.jti)
+    }
+    const newRefreshToken = await this.tokensService.createToken(exists)
+    this.tokensService.attatchToken(newRefreshToken, res)
+    return newRefreshToken;
   }
 }
