@@ -13,16 +13,25 @@ const CookieExtractor = (req : Request): string | null =>{
    return req.cookies['token'] ?? null;
 }
 
+const LoggingExtractor = (req: Request): string | null => {
+  // log whatever the client actually sent
+  console.log('→ RAW auth header:', req.headers.authorization);
+  // now invoke the built-in Bearer parser:
+  return ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+};
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt'){
   constructor(config: ConfigService, private readonly tokensService: TokensService,) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([CookieExtractor]),
-      ignoreExpiration: false,
-      secretOrKey: config.get<string>('JWT_SECRET')!,
+      jwtFromRequest: LoggingExtractor,
+      ignoreExpiration: true,
+      secretOrKey: config.get<string>('JWT_ACCESS_SECRET')!,
     });
   }
+
     async validate(payload: any) {
+        console.log("reached validate")
         if(payload.type != "access"){
           throw new UnauthorizedException("Token Type not Valid: Expected Access Token")
         }

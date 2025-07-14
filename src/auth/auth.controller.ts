@@ -28,8 +28,8 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginAuthDto:Login, @Res({ passthrough: true }) res: Response, @Req() req: Request){
     console.log("Ran at Backend controller, /auth.controller")
-    const token = await this.authService.login(loginAuthDto, res, req)
-    return token;
+    const tokens = await this.authService.login(loginAuthDto, res, req)
+    return tokens.accesstoken;
   }
 
 //performs logout logic, bu passing the Response object to have it's auth-token detatched

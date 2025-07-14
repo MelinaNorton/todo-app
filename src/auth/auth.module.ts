@@ -4,11 +4,12 @@ import { AuthController } from './auth.controller';
 import { UserModule } from 'src/users/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule, JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtRefreshStrategy } from '../tokens/strategies/jwt.refreshStrategy';
 import { BcryptService } from './providers/bcrypt.service';
 import { TokensService } from 'src/tokens/tokens.service';
 import { TokensModule } from 'src/tokens/tokens.module';
+import { JwtStrategy } from 'src/tokens/strategies/jwt.strategy';
 
 @Module({
   imports:[
@@ -16,16 +17,17 @@ import { TokensModule } from 'src/tokens/tokens.module';
     TokensModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
-      imports: [UserModule],
+      imports: [UserModule, ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-          secret: config.get<string>('JWT_SECRET'),
+          secret: config.get<string>('JWT_ACCESS_SECRET'),
           signOptions: {
-            expiresIn: config.get<string | number>('JWT_EXPIRES'),
+            expiresIn: config.get<string | number>('JWT_ACCESS_EXPIRES'),
           },
       })
     }),],
   controllers: [AuthController],
-  providers: [AuthService, BcryptService],
+  providers: [AuthService, BcryptService, JwtStrategy],
+  exports: [PassportModule]
 })
 export class AuthModule {}

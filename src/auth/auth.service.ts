@@ -42,7 +42,7 @@ export class AuthService {
 
 //carry out our login data using our afformentioned validate() helper-function, and then our TokenService's createToken\
 //funcrion to attatch our successfully authenticated user's session with the token needed to access certain endpoints
-  async login(loginAuthoDto : Login, @Res({ passthrough: true }) res: Response, @Req() req: Request):Promise<string> {
+  async login(loginAuthoDto : Login, @Res({ passthrough: true }) res: Response, @Req() req: Request):Promise<{token:string, accesstoken:string}> {
     const exists = await this.validate(loginAuthoDto)
     const existing = req.cookies['refreshtoken']
     if(existing){
@@ -51,6 +51,9 @@ export class AuthService {
     }
     const newRefreshToken = await this.tokensService.createToken(exists)
     this.tokensService.attatchToken(newRefreshToken, res)
-    return newRefreshToken;
+
+    const newAccessToken = await this.tokensService.createAccessToken(exists)
+
+    return {token:newRefreshToken, accesstoken:newAccessToken};
   }
 }
