@@ -25,7 +25,7 @@ export class FilterUserDto {
 
     @IsOptional()
     @IsString()
-    _id? :string
+    _id? :any
 
     /*@ValidateNested({ each: true })
     @Type(() => FilterToDoItemDto)

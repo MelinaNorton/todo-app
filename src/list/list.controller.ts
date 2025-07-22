@@ -42,7 +42,8 @@ export class ListController {
 //the item on the list w/ the matching user_id
     @UseGuards(AuthGuard('jwt'))
     @Patch('item')
-    async updateItem(@Query() filter:FilterToDoListDto, @Body() update: UpdateToDoItemDto){
+    async updateItem(@Request() req, @Query() filter:FilterToDoListDto, @Body() update: UpdateToDoItemDto){
+        filter.user_id = req.user.sub
         return await this.listService.updateItem(filter, update)
     }
 
@@ -50,7 +51,8 @@ export class ListController {
 //with that user & then finds-and-deletes the item with the matching item_id
     @UseGuards(AuthGuard('jwt'))
     @Delete('item')
-    async deleteItem(@Query() filter:FilterToDoListDto){
+    async deleteItem(@Request() req, @Query() filter:FilterToDoListDto){
+        filter.user_id = req.user.sub
         return await this.listService.deleteItem(filter)
     }
 
@@ -58,7 +60,8 @@ export class ListController {
     @HttpCode(201)
     @UseGuards(AuthGuard('jwt'))
     @Post('item')
-    async addItem(@Query() filter:FilterToDoListDto, @Body() createTodo : CreateToDoItemDto){
+    async addItem(@Request() req, @Query() filter:FilterToDoListDto, @Body() createTodo : CreateToDoItemDto){
+        filter.user_id = req.user.sub
         return await this.listService.addItem(filter, createTodo)
     }
 }

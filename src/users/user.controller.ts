@@ -13,6 +13,8 @@ import { CreateListDto } from 'src/list/dto/create-list.dto';
 import { ToDo } from 'src/list/interface/todoitem.interface';
 import { Inject } from '@nestjs/common';
 import { forwardRef } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from '@nestjs/common';
 
 @Controller('User')
 export class UsersController {
@@ -62,9 +64,11 @@ async upload(@Query('_id') _id:string, @UploadedFile() file:Express.Multer.File,
 }
 //get all items- includes empty contingency, since query == {} returns all docs, as well as specific-
 // no need for separate routes
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AuthGuard('jwt'))
     @Get('get')
-    async findAll(@Query() query:FilterUserDto) {
+    async findAll(@Request() req, @Query() item_id:string) {
+      const query = {_id:req.user.sub}
+      console.log("Query from findAll user controller: ", query)
       return await this.usersService.findAll(query);
     }
     
