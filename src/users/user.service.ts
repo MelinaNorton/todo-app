@@ -35,7 +35,7 @@ export class UserService {
 
 //builds the appropriate url from with the served image can be accessed, and sends that "src" to the user's document
 //as a string to be pulled for rendering
-async upload(usr_id:string, imgFile:string, update:UpdateUserDto){
+async upload(sub:string, imgFile:string, update:UpdateUserDto){
   const port = parseInt(process.env.PORT ?? '3000', 10);
     const url = "http://localhost:" + port + imgFile;
     const updated = {
@@ -45,7 +45,7 @@ async upload(usr_id:string, imgFile:string, update:UpdateUserDto){
     console.log("Update To Be: ", updated)
     console.log("image URL: ", url)
     const changed = await this.usersModel.findOneAndUpdate(
-      { _id: usr_id },
+      { _id: sub },
       { $set: updated },      
       { new: true } 
     );

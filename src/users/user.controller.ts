@@ -35,6 +35,7 @@ export class UsersController {
 //not as complicated as it looks- initializes the UseInterceptors decorator with our desired config (choosing filename,)
 //directory, filetyepe & download location, then takes in multipart-formdata & the user's id to download the given File ->
 // the /uploads file & serves it statically from there
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor("file", {
       storage: diskStorage({
@@ -57,10 +58,11 @@ export class UsersController {
   })
 )
 @Patch('image')
-async upload(@Query('_id') _id:string, @UploadedFile() file:Express.Multer.File, @Body() update: UpdateUserDto){
+async upload(@Request() req, @Query('_id') _id:string, @UploadedFile() file:Express.Multer.File, @Body() update: UpdateUserDto){
   console.log(file)
   const imgFile = `/uploads/${file.filename}`;
-  return this.usersService.upload(_id, imgFile, update);
+  console.log("Cookie id extracted in upload controller: ", req.user.sub)
+  return this.usersService.upload(req.user.sub, imgFile, update);
 }
 //get all items- includes empty contingency, since query == {} returns all docs, as well as specific-
 // no need for separate routes
@@ -75,7 +77,8 @@ async upload(@Query('_id') _id:string, @UploadedFile() file:Express.Multer.File,
 //patch any contingency- multiple changes, one, or none (uses findOne, so only changes 1)
     @UseGuards(JwtAuthGuard)
     @Patch('patch')
-    update(@Query() query:FilterUserDto, @Body() updateUserDto: UpdateUserDto) {
+    update(@Request() req, @Query() query:FilterUserDto, @Body() updateUserDto: UpdateUserDto) {
+      query._id = req.user.sub
       return this.usersService.update(query,updateUserDto)
     }
 
