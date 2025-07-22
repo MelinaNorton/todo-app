@@ -7,6 +7,8 @@ import { CreateToDoItemDto } from './dto/create-todoitem.dto';
 import { UserService } from 'src/users/user.service';
 import { CreateListDto } from './dto/create-list.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Request } from '@nestjs/common';
+
 @Controller('list')
 export class ListController {
     constructor(
@@ -30,8 +32,9 @@ export class ListController {
 //w/the matching user_id
     @UseGuards(AuthGuard('jwt'))
     @Get('items')
-    async findItems(@Query() filter:FilterToDoListDto){
-        console.log(filter)
+    async findItems(@Request() req){
+        const filter = {user_id:req.user.sub}
+        console.log("Filter from findItems: ", filter)
         return await this.listService.getItems(filter)
     }
 

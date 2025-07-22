@@ -29,6 +29,7 @@ export class AuthController {
   async login(@Body() loginAuthDto:Login, @Res({ passthrough: true }) res: Response, @Req() req: Request){
     console.log("Ran at Backend controller, /auth.controller")
     const tokens = await this.authService.login(loginAuthDto, res, req)
+    console.log("Tokens returned to login controller: ", tokens)
     return tokens.accesstoken;
   }
 

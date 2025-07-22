@@ -9,14 +9,14 @@ import { JwtService } from '@nestjs/jwt';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('token')
+@Controller('Token')
 export class TokensController {
 constructor(
     private readonly tokensService: TokensService,
     private jwtService: JwtService
   ) {}
 
-   @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Post('refreshtoken')
   async createAndAttachRefreshToken(user:User, @Res({ passthrough: true }) res: Response):Promise<string>{
     const refreshtoken = await this.tokensService.createToken(user)

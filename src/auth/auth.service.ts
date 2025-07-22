@@ -50,10 +50,10 @@ export class AuthService {
       this.tokensService.revokeRefreshToken(existing.jti)
     }
     const newRefreshToken = await this.tokensService.createToken(exists)
+    console.log("Refresh Token Created in login service: ", newRefreshToken)
     this.tokensService.attatchToken(newRefreshToken, res)
-
     const newAccessToken = await this.tokensService.createAccessToken(exists)
-
+    console.log("Access Token Created in login service: ", newAccessToken)
     return {token:newRefreshToken, accesstoken:newAccessToken};
   }
 }
