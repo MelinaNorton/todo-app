@@ -5,19 +5,19 @@ import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { TokensService } from '../tokens.service';
 
-const CookieExtractor = (req : Request): string | null =>{
+const RefreshCookieExtractor = (req : Request): string | null =>{
     if(!req?.cookies){
-        console.error("No Request recieved from CookieExtractor @/auth/jwt.strategy.ts")
+        console.error("No Request recieved from CookieExtractor")
         return null;
     }
-   return req.cookies['token'] ?? null;
+   return req.cookies['refreshtoken'] ?? null;
 }
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh'){
   constructor(config: ConfigService, private readonly tokensService: TokensService,) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([CookieExtractor]),
+      jwtFromRequest: ExtractJwt.fromExtractors([RefreshCookieExtractor]),
       ignoreExpiration: false,
       secretOrKey: config.get<string>('JWT_REFRESH_SECRET')!,
     });

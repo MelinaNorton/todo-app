@@ -9,11 +9,12 @@ import { TokensService } from './tokens.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { tokenSchema } from './schema/tokens.schema';
 import { ConfigModule } from '@nestjs/config';
+import { JwtRefreshGuard } from './guards/jwt.guards';
 
 @Module({
   imports:[
     ConfigModule,
-    PassportModule.register({ defaultStrategy: 'jwt-refresh' }),
+    PassportModule,
       JwtModule.registerAsync({
       inject:  [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -24,7 +25,7 @@ import { ConfigModule } from '@nestjs/config';
     MongooseModule.forFeature([{ name: "Token", schema: tokenSchema }]),
 ],
   controllers: [TokensController],
-  providers: [TokensService],
+  providers: [TokensService, JwtRefreshStrategy, JwtRefreshGuard],
   exports: [TokensService]
 })
 export class TokensModule {}

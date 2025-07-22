@@ -55,8 +55,8 @@ export class TokensService {
       return token;
     }
 
-    async createAccessToken(user:User):Promise<string>{
-        const token = await this.jwtService.sign({ sub:user._id, username: user.username, type:"access"},{
+    async createAccessToken({sub,username}: {sub:string, username:string}):Promise<string>{
+        const token = await this.jwtService.sign({ sub:sub, username: username, type:"access"},{
             secret: this.accesssecret,
             expiresIn: this.accessexpiry
         })

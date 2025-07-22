@@ -52,7 +52,7 @@ export class AuthService {
     const newRefreshToken = await this.tokensService.createToken(exists)
     console.log("Refresh Token Created in login service: ", newRefreshToken)
     this.tokensService.attatchToken(newRefreshToken, res)
-    const newAccessToken = await this.tokensService.createAccessToken(exists)
+    const newAccessToken = await this.tokensService.createAccessToken({sub: exists._id, username:exists.username})
     console.log("Access Token Created in login service: ", newAccessToken)
     return {token:newRefreshToken, accesstoken:newAccessToken};
   }
