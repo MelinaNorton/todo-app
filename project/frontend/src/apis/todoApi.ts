@@ -6,10 +6,11 @@ import axios from 'axios'
 const context = useAuth()
 
 //fetch items endpoint; refresh/retries on 401
-export const fetchItems = async (data : getItems):Promise<any> =>{
+//no params/data necessary, since refresh/access token identifies us
+export const fetchItems = async ():Promise<any> =>{
     const token = context.token
     try{
-        const resp = await api.get('/list/items', {params: data ,headers: {Authorization: `Bearer ${token}`}})
+        const resp = await api.get('/list/items', {headers: {Authorization: `Bearer ${token}`}})
         return resp.data
     }
     catch(err){
@@ -19,7 +20,7 @@ export const fetchItems = async (data : getItems):Promise<any> =>{
                 const access = await refresh()
                 //re-call fetchItems endpoint
                 if(access){
-                    return await fetchItems(data)
+                    return await fetchItems()
                 }
             }
         }

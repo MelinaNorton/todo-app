@@ -7,6 +7,26 @@ import { refresh } from '@/resources/helpers/publicResources';
 //context object to grab -> token & setToken
 const context = useAuth()
 
+export const getUsers = async():Promise<any> =>{
+    const token = context.token
+    try{
+        const resp = await api.get('/User', {headers: {Authorization : `Bearer ${token}`}})
+        return resp.data
+    }
+    catch(err){
+       if(axios.isAxiosError(err)){
+            if(err.response?.status === 401){
+                //call refresh endpoint
+                const access = await refresh()
+                //re-call getUsers endpoint
+                if(access){
+                    return await getUsers()
+                }
+            }
+        } 
+    }
+}
+
 //login endpoint (that initially sets the refresh(backend logic)/access token(state logic))
 export const login = async(data : loginUser) =>{
     try{

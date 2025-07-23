@@ -11,19 +11,19 @@ export const useUpdateUser = () =>{
     const mutation = useMutation<newUser, AxiosError, updateUserData, any>({
         mutationFn: (data) => update(data),
         onMutate: async(variables) =>{
-            await qc.cancelQueries({queryKey: ['user']})
-            const prev = qc.getQueryData(['user'])
-            qc.setQueryData(['user'], (old) =>({
+            await qc.cancelQueries({queryKey: ['User']})
+            const prev = qc.getQueryData(['User'])
+            qc.setQueryData(['User'], (old) =>({
                 ...(old as updateUserData),
                 ...variables
             }))
             return {prev}
         },
         onError: (err, data, context) =>{
-            qc.setQueryData(['user'], context?.prev);
+            qc.setQueryData(['User'], context?.prev);
         },
         onSettled: () =>{
-            qc.invalidateQueries({queryKey:['user']})
+            qc.invalidateQueries({queryKey:['User']})
         }
     })
     return mutation
@@ -58,22 +58,22 @@ export const userUpload = () =>{
     const mutation = useMutation<string, AxiosError, uploadFile, any>({
         mutationFn: (data) => upload(data),
         onMutate: async(variables) =>{
-            await qc.cancelQueries({queryKey: ['user']})
-            const prev = qc.getQueryData(['user'])
+            await qc.cancelQueries({queryKey: ['User']})
+            const prev = qc.getQueryData(['User'])
             const file = variables.image.get('image') as File;
             const previewUrl = URL.createObjectURL(file);
 
-            qc.setQueryData(['user'], (old) =>({
+            qc.setQueryData(['User'], (old) =>({
                 ...(old as newUser),
                 image:previewUrl
             }))
             return {prev}
         },
         onError: (err, data, context) =>{
-            qc.setQueryData(['user'], context?.prev);
+            qc.setQueryData(['User'], context?.prev);
         },
         onSettled: () =>{
-            qc.invalidateQueries({queryKey:['user']})
+            qc.invalidateQueries({queryKey:['User']})
         }
     })
     return mutation
