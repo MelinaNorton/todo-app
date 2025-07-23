@@ -1,10 +1,11 @@
+'use client';
+
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '@/resources/schemas/userSchemas';
 import { loginUser } from '@/resources/interfaces/userInterfaces';
 import { useLoginUser } from '@/hooks/mutations/userMutations';
 import GeneralButton from './generalButton';
-const login = useLoginUser()
 
 export default function LoginForm(){
     const {
@@ -20,6 +21,7 @@ export default function LoginForm(){
     });
 
     const onSubmit = (data : loginUser) =>{
+        const login = useLoginUser()
         login.mutate(data)
     }
 

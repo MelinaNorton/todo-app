@@ -4,11 +4,8 @@ import { loginUser, getUser, updateUserData, uploadFile, newUser } from '@/resou
 import { useAuth } from '@/resources/context/authContext';
 import { refresh } from '@/resources/helpers/publicResources';
 
-//context object to grab -> token & setToken
-const context = useAuth()
 
-export const getUsers = async():Promise<any> =>{
-    const token = context.token
+export const getUsers = async(token:string):Promise<any> =>{
     try{
         const resp = await api.get('/User', {headers: {Authorization : `Bearer ${token}`}})
         return resp.data
@@ -20,7 +17,7 @@ export const getUsers = async():Promise<any> =>{
                 const access = await refresh()
                 //re-call getUsers endpoint
                 if(access){
-                    return await getUsers()
+                    return await getUsers(token)
                 }
             }
         } 
@@ -32,7 +29,6 @@ export const login = async(data : loginUser) =>{
     try{
         const resp = await api.post('/Auth/login', data)
         console.log("Token recieved on login: ", resp.data)
-        context.setToken(resp.data)
         return resp.data
     }
     catch(err){
@@ -52,9 +48,8 @@ export const signup = async(data : newUser) =>{
 }
 
 //update user data (uses access token auth header) & refresh/retry on 401
-export const update = async(data : updateUserData): Promise<any> =>{
+export const update = async(data : updateUserData, token:string): Promise<any> =>{
     try{
-        const token = context.token
         const resp = await api.patch('/User/update', data, {headers: {Authorization: `Bearer ${token}`}})
         return resp.data
     }
@@ -65,7 +60,7 @@ export const update = async(data : updateUserData): Promise<any> =>{
                 const access = await refresh()
                 //re-call update endpoint
                 if(access){
-                    return await update(data)
+                    return await update(data, token)
                 }
             }
         }
@@ -73,8 +68,7 @@ export const update = async(data : updateUserData): Promise<any> =>{
 }
 
 //upload endpoint for profile image
-export const upload = async(data : uploadFile):Promise<any> =>{
-    const token = context.token
+export const upload = async(data : uploadFile, token:string):Promise<any> =>{
     try{
         const resp = await api.patch('/User/image', data, {headers:{Authorization: `Bearer ${token}`}})
         return resp.data
@@ -86,7 +80,7 @@ export const upload = async(data : uploadFile):Promise<any> =>{
                 const access = await refresh()
                 //re-call update endpoint
                 if(access){
-                    return await upload(data)
+                    return await upload(data, token)
                 }
             }
         }

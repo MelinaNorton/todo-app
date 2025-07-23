@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { useAuth } from '../context/authContext'
-const context = useAuth()
 
 //api const to be used across the app w/base URL & refresh token included
 export const api = axios.create({
@@ -10,6 +9,7 @@ export const api = axios.create({
 
 //refresh endpoint helper function
 export const refresh = async() =>{
+    const context = useAuth()
     try{
         const resp = await api.post("/Token/refresh")
         context.setToken(resp.data)

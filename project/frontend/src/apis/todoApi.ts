@@ -3,12 +3,10 @@ import { api } from "@/resources/helpers/publicResources";
 import { useAuth } from "@/resources/context/authContext";
 import { refresh } from "@/resources/helpers/publicResources";
 import axios from 'axios'
-const context = useAuth()
 
 //fetch items endpoint; refresh/retries on 401
 //no params/data necessary, since refresh/access token identifies us
-export const fetchItems = async ():Promise<any> =>{
-    const token = context.token
+export const fetchItems = async (token:string):Promise<any> =>{
     try{
         const resp = await api.get('/list/items', {headers: {Authorization: `Bearer ${token}`}})
         return resp.data
@@ -20,7 +18,7 @@ export const fetchItems = async ():Promise<any> =>{
                 const access = await refresh()
                 //re-call fetchItems endpoint
                 if(access){
-                    return await fetchItems()
+                    return await fetchItems(token)
                 }
             }
         }
@@ -28,8 +26,7 @@ export const fetchItems = async ():Promise<any> =>{
 }
 
 //updateItems endpoint; refresh/retries on 401
-export const updateItems = async(data : updateItem):Promise<any> =>{
-    const token = context.token
+export const updateItems = async(data : updateItem, token:string):Promise<any> =>{
     try{
         const resp = await api.patch('/list/update', {params:data, headers:{Authorization: `Bearer ${token}`}})
         return resp.data
@@ -41,7 +38,7 @@ export const updateItems = async(data : updateItem):Promise<any> =>{
                 const access = await refresh()
                 //re-call fetchItems endpoint
                 if(access){
-                    return await updateItems(data)
+                    return await updateItems(data, token)
                 }
             }
         }
@@ -49,8 +46,7 @@ export const updateItems = async(data : updateItem):Promise<any> =>{
 }
 
 //delete Items endpoint; refresh/retry on 401
-export const deleteItems = async(data : deleteItem):Promise<any> =>{
-    const token = context.token
+export const deleteItems = async(data : deleteItem, token:string):Promise<any> =>{
 
     try{
         const resp = await api.delete('/list', {params:data, headers: {Authorization : `Bearer ${token}`}})
@@ -63,7 +59,7 @@ export const deleteItems = async(data : deleteItem):Promise<any> =>{
                 const access = await refresh()
                 //re-call fetchItems endpoint
                 if(access){
-                    return await deleteItems(data)
+                    return await deleteItems(data, token)
                 }
             }
         }
@@ -71,8 +67,7 @@ export const deleteItems = async(data : deleteItem):Promise<any> =>{
 }
 
 //add Items endpoint; refresh/retry on 401
-export const addItems = async(data : newItem):Promise<any> =>{
-    const token = context.token
+export const addItems = async(data : newItem, token:string):Promise<any> =>{
 
     try{
         const resp = await api.post('/list', {params:data, headers: {Authorization : `Bearer ${token}`}})
@@ -85,7 +80,7 @@ export const addItems = async(data : newItem):Promise<any> =>{
                 const access = await refresh()
                 //re-call fetchItems endpoint
                 if(access){
-                    return await addItems(data)
+                    return await addItems(data,token)
                 }
             }
         }
