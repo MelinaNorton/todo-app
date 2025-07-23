@@ -1,0 +1,80 @@
+import { update, login, signup, upload } from "@/apis/userApi";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { loginUser, newUser, updateUserData, uploadFile } from "@/resources/interfaces/userInterfaces";
+import { AxiosError } from "axios";
+
+//all below mutations, besides login & signup, utilize query-canceling, optimistic patching, and on-error rollbacks
+
+//mutation hook to update user-profile data
+export const useUpdateUser = () =>{
+    const qc = useQueryClient()
+    const mutation = useMutation<newUser, AxiosError, updateUserData, any>({
+        mutationFn: (data) => update(data),
+        onMutate: async(variables) =>{
+            await qc.cancelQueries({queryKey: ['user']})
+            const prev = qc.getQueryData(['user'])
+            qc.setQueryData(['user'], (old) =>({
+                ...(old as updateUserData),
+                ...variables
+            }))
+            return {prev}
+        },
+        onError: (err, data, context) =>{
+            qc.setQueryData(['user'], context?.prev);
+        },
+        onSettled: () =>{
+            qc.invalidateQueries({queryKey:['user']})
+        }
+    })
+    return mutation
+}
+
+//mutation hook to login user
+export const useLoginUser = () =>{
+    const mutation = useMutation<newUser, AxiosError, loginUser, any>({
+        mutationFn: (data) => login(data),
+        onError: (err, data, context) =>{
+            return err.message;
+        },
+    })
+    return mutation
+}
+
+//mutation hook to create a new user
+export const useSignupUser = () =>{
+    const qc = useQueryClient()
+    const mutation = useMutation<newUser, AxiosError, newUser, any>({
+        mutationFn: (data) => signup(data),
+        onError: (err, data, context) =>{
+            return err.message
+        }
+    })
+    return mutation
+}
+
+//mutation hook to upload a new profile image
+export const userUpload = () =>{
+    const qc = useQueryClient()
+    const mutation = useMutation<string, AxiosError, uploadFile, any>({
+        mutationFn: (data) => upload(data),
+        onMutate: async(variables) =>{
+            await qc.cancelQueries({queryKey: ['user']})
+            const prev = qc.getQueryData(['user'])
+            const file = variables.image.get('image') as File;
+            const previewUrl = URL.createObjectURL(file);
+
+            qc.setQueryData(['user'], (old) =>({
+                ...(old as newUser),
+                image:previewUrl
+            }))
+            return {prev}
+        },
+        onError: (err, data, context) =>{
+            qc.setQueryData(['user'], context?.prev);
+        },
+        onSettled: () =>{
+            qc.invalidateQueries({queryKey:['user']})
+        }
+    })
+    return mutation
+}

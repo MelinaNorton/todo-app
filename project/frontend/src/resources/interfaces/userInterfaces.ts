@@ -16,8 +16,7 @@ export interface updateUserData {
 }
 
 export interface uploadFile {
-    _id : string,
-    image : string
+    image : FormData
 }
 
 export interface newUser {
