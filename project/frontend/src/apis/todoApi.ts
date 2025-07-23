@@ -1,4 +1,4 @@
-import { getItems, updateItem, deleteItem} from "@/resources/interfaces/todoInterfaces";
+import { getItems, updateItem, deleteItem, newItem} from "@/resources/interfaces/todoInterfaces";
 import { api } from "@/resources/helpers/publicResources";
 import { useAuth } from "@/resources/context/authContext";
 import { refresh } from "@/resources/helpers/publicResources";
@@ -63,6 +63,28 @@ export const deleteItems = async(data : deleteItem):Promise<any> =>{
                 //re-call fetchItems endpoint
                 if(access){
                     return await deleteItems(data)
+                }
+            }
+        }
+    }
+}
+
+//add Items endpoint; refresh/retry on 401
+export const addItems = async(data : newItem):Promise<any> =>{
+    const token = context.token
+
+    try{
+        const resp = await api.post('/list', {params:data, headers: {Authorization : `Bearer ${token}`}})
+        return resp.data
+    }
+    catch(err){
+        if(axios.isAxiosError(err)){
+            if(err.response?.status === 401){
+                //call refresh endpoint
+                const access = await refresh()
+                //re-call fetchItems endpoint
+                if(access){
+                    return await addItems(data)
                 }
             }
         }
