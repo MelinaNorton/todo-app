@@ -9,6 +9,7 @@ export const api = axios.create({
 
 //refresh endpoint helper function
 export const refresh = async() =>{
+    console.log("REFRESHING!")
     const context = useAuth()
     try{
         const resp = await api.post("/Token/refresh")

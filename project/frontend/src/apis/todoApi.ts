@@ -18,7 +18,7 @@ export const fetchItems = async (token:string):Promise<any> =>{
                 const access = await refresh()
                 //re-call fetchItems endpoint
                 if(access){
-                    return await fetchItems(token)
+                    return await fetchItems(access)
                 }
             }
         }

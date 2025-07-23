@@ -15,5 +15,16 @@ export interface deleteItem {
 export interface newItem {
     text:string,
     done:boolean,
+    item_id?:string
+}
+
+export interface listItem {
+    text:string,
+    done:boolean,
     item_id:string
+}
+
+export interface listData {
+    text:string,
+    done:boolean,
 }

@@ -9,7 +9,7 @@ import { useSignupUser } from '@/hooks/mutations/userMutations';
 
 export default function SignupForm(){
     const signupUser = useSignupUser()
-    
+
     const {
     register,
     handleSubmit,
@@ -30,7 +30,7 @@ export default function SignupForm(){
     }
 
     return(
-        <form onSubmit={handleSubmit(onSubmit)} className="h-40 w-55 rounded-4xl">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center justify-center space-y-2 h-40 w-40 rounded-4xl">
             {errors?.username?.message ? <p className="text-red-700 text-sm">{errors.username.message}</p> : <p></p>}
             <input type="text" className="w-full md:w-25 h-7 bg-white rounded-4xl" {...register('username')} placeholder='enter username'></input>
             {errors?.password?.message ? <p className="text-red-700 text-sm">{errors.password.message}</p> : <p></p>}

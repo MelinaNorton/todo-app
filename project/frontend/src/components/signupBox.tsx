@@ -1,8 +1,14 @@
+'use client'
+
 import SignupForm from "./signupForm"
+import GeneralButton from "./generalButton"
+import { useRouter } from 'next/navigation' // for client components
 
 export default function SignupBox(){
+    const router = useRouter()
     return(
-        <div className="flex flex-col items-center justify-center h-[50vw] md:h-60 w-full bg-blue-100 rounded-4xl">
+        <div className="flex flex-col items-center space-y-6 justify-center h-[60vw] md:h-70 w-70 bg-blue-100 rounded-4xl">
+            <GeneralButton type="button" text="back" action={() => router.push('/login')}/>
             <SignupForm/>
         </div>
     )
