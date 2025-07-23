@@ -2,12 +2,15 @@ import { updateItems, deleteItems, addItems } from "@/apis/todoApi";
 import { AxiosError } from "axios";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateItem, newItem, deleteItem } from "@/resources/interfaces/todoInterfaces";
+import { useAuth } from "@/resources/context/authContext";
 
 //mutation hook to update list-item data
 export const useUpdateItems = () =>{
+    const context = useAuth()
+
     const qc = useQueryClient()
     const mutation = useMutation<updateItem, AxiosError, updateItem, any>({
-        mutationFn: (data) => updateItems(data),
+        mutationFn: (data) => updateItems(data, context.token),
         onMutate: async(variables) =>{
             await qc.cancelQueries({queryKey: ['list']})
             const prev = qc.getQueryData(['list'])
@@ -29,9 +32,10 @@ export const useUpdateItems = () =>{
 
 //mutation hook to update user-profile data
 export const useAddItem = () =>{
+    const context = useAuth()
     const qc = useQueryClient()
     const mutation = useMutation<newItem, AxiosError, newItem, any>({
-        mutationFn: (data) => addItems(data),
+        mutationFn: (data) => addItems(data, context.token),
         onMutate: async(variables) =>{
             await qc.cancelQueries({queryKey: ['user']})
             const prev = qc.getQueryData(['user'])
@@ -50,9 +54,11 @@ export const useAddItem = () =>{
 
 //mutation hook to delete a listitem from a user's list
 export const useDeleteItem = () =>{
+    const context = useAuth()
+
     const qc = useQueryClient()
     const mutation = useMutation<newItem, AxiosError, deleteItem, any>({
-        mutationFn: (data) => deleteItems(data),
+        mutationFn: (data) => deleteItems(data, context.token),
         onMutate: async(variables) =>{
             await qc.cancelQueries({queryKey: ['list']})
             const prev = qc.getQueryData(['list'])

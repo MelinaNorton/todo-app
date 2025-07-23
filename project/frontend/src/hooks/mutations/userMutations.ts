@@ -33,11 +33,15 @@ export const useUpdateUser = () =>{
 
 //mutation hook to login user
 export const useLoginUser = () =>{
-    const mutation = useMutation<newUser, AxiosError, loginUser, any>({
+    const context = useAuth()
+    const mutation = useMutation<string, AxiosError, loginUser, any>({
         mutationFn: (data) => login(data),
         onError: (err, data, context) =>{
             return err.message;
         },
+        onSettled: (response) =>{
+            context.setToken(response ? response : "")
+        }
     })
     return mutation
 }

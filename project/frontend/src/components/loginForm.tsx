@@ -6,8 +6,12 @@ import { loginSchema } from '@/resources/schemas/userSchemas';
 import { loginUser } from '@/resources/interfaces/userInterfaces';
 import { useLoginUser } from '@/hooks/mutations/userMutations';
 import GeneralButton from './generalButton';
+import { useRouter } from 'next/navigation' // for client components
 
 export default function LoginForm(){
+    const login = useLoginUser()
+    const router = useRouter()
+
     const {
     register,
     handleSubmit,
@@ -21,8 +25,8 @@ export default function LoginForm(){
     });
 
     const onSubmit = (data : loginUser) =>{
-        const login = useLoginUser()
         login.mutate(data)
+        router.push('/home')
     }
 
     return(

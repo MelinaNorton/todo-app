@@ -34,7 +34,7 @@ export const AuthProvider = ({children}: {children:ReactNode}) =>{
         }
 
         tryRefresh()
-    },[token, setToken])
+    },[])
 
     return(
         <AuthContext.Provider value={{ token, setToken }}>

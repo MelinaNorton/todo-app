@@ -3,7 +3,7 @@ import { useAuth } from '../context/authContext'
 
 //api const to be used across the app w/base URL & refresh token included
 export const api = axios.create({
-  baseURL: "https://localhost:3000",
+  baseURL: "http://localhost:3000",
   withCredentials: true,
 });
 
