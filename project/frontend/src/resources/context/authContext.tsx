@@ -3,8 +3,8 @@ import axios from 'axios'
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 //api const to be used across the app w/base URL & refresh token included
-const api = axios.create({
-  baseURL: "https://localhost:3000/",
+export const api = axios.create({
+  baseURL: "https://localhost:3000",
   withCredentials: true,
 });
 
@@ -27,7 +27,7 @@ export const AuthProvider = ({children}: {children:ReactNode}) =>{
     useEffect(()=>{
         const tryRefresh = async() =>{
             try{
-                const res = await api.post('https://localhost:3000/refresh')
+                const res = await api.post('/refresh')
                 if(!res){
                     throw new Error("Invalid or empty token returned; log back in to continue using the app")
                 }
@@ -47,4 +47,7 @@ export const AuthProvider = ({children}: {children:ReactNode}) =>{
         </AuthContext.Provider>
     )
 }
+
+//exported hook to connect files -> our stateful context
+export const useAuth = () => useContext(AuthContext);
 
