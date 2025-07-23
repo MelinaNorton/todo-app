@@ -1,12 +1,7 @@
 'use client'
 import axios from 'axios'
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-//api const to be used across the app w/base URL & refresh token included
-export const api = axios.create({
-  baseURL: "https://localhost:3000",
-  withCredentials: true,
-});
+import { api } from '../helpers/publicResources';
 
 //context data to be shared through the hook
 interface contextData {

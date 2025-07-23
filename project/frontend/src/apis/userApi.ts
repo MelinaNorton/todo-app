@@ -1,7 +1,8 @@
-import { api } from '@/resources/context/authContext';
+import { api } from '@/resources/helpers/publicResources';
 import axios from 'axios'
 import { loginUser, getUser, updateUserData, uploadFile, newUser } from '@/resources/interfaces/userInterfaces';
 import { useAuth } from '@/resources/context/authContext';
+import { refresh } from '@/resources/helpers/publicResources';
 
 //context object to grab -> token & setToken
 const context = useAuth()
@@ -69,17 +70,5 @@ export const upload = async(data : uploadFile):Promise<any> =>{
                 }
             }
         }
-    }
-}
-
-//refresh endpoint helper function
-export const refresh = async() =>{
-    try{
-        const resp = await api.post("/Token/refresh")
-        context.setToken(resp.data)
-        return resp.data
-    }
-    catch(err){
-        throw new Error("Errors refreshing access token; log back in to use the app")
     }
 }
