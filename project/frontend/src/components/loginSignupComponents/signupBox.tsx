@@ -1,7 +1,7 @@
 'use client'
 
 import SignupForm from "./signupForm"
-import GeneralButton from "./generalButton"
+import GeneralButton from "../generalButton"
 import { useRouter } from 'next/navigation' // for client components
 
 export default function SignupBox(){

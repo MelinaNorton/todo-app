@@ -8,7 +8,9 @@ import { listItem } from '@/resources/interfaces/todoInterfaces';
 
 export const getUsers = async(token:string):Promise<any> =>{
     try{
-        const resp = await api.get('/User', {headers: {Authorization : `Bearer ${token}`}})
+        console.log("Token recieved by getUsers: ", token)
+        const resp = await api.get('/User/get', {headers: {Authorization : `Bearer ${token}`}})
+        console.log("Returned User: ", resp.data)
         return resp.data
     }
     catch(err){
@@ -43,9 +45,9 @@ export const signup = async(data : newUser) =>{
         const emptyList:listItem[] = []
         const dataWithList = {...data, items:emptyList}
         const resp = await api.post('/auth/signup', dataWithList)
+
         const user_id = resp.data._id
-        console.log("user_id: ", user_id)
-        const list = await api.post('/list', {user_id:user_id})
+        await api.post('/list', {user_id:user_id})
         return resp.data
     }
     catch(err){
@@ -56,7 +58,7 @@ export const signup = async(data : newUser) =>{
 //update user data (uses access token auth header) & refresh/retry on 401
 export const update = async(data : updateUserData, token:string): Promise<any> =>{
     try{
-        const resp = await api.patch('/User/update', data, {headers: {Authorization: `Bearer ${token}`}})
+        const resp = await api.patch('/User/patch', data, {headers: {Authorization: `Bearer ${token}`}})
         return resp.data
     }
     catch(err){

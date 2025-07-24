@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { listItemSchema } from '@/resources/schemas/listSchemas';
 import { newItem, listItem, listData } from '@/resources/interfaces/todoInterfaces';
 import { useAddItem } from '@/hooks/mutations/todoMutations';
-import GeneralButton from './generalButton';
+import GeneralButton from '../generalButton';
 
 export default function AddItemForm(){
     const adder = useAddItem()

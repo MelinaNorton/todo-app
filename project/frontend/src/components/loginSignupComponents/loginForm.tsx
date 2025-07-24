@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '@/resources/schemas/userSchemas';
 import { loginUser } from '@/resources/interfaces/userInterfaces';
 import { useLoginUser } from '@/hooks/mutations/userMutations';
-import GeneralButton from './generalButton';
+import GeneralButton from '../generalButton';
 import { useRouter } from 'next/navigation' // for client components
 
 export default function LoginForm(){

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { signupSchema } from '@/resources/schemas/userSchemas';
 import { newUser, newUserWithList } from '@/resources/interfaces/userInterfaces';
-import GeneralButton from './generalButton';
+import GeneralButton from '../generalButton';
 import { useSignupUser } from '@/hooks/mutations/userMutations';
 import { listItem } from '@/resources/interfaces/todoInterfaces';
 

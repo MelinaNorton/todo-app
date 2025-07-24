@@ -1,5 +1,5 @@
 import LoginForm from "./loginForm"
-import generalButton from "./generalButton"
+import generalButton from "../generalButton"
 
 export default function LoginBox(){
     return(
