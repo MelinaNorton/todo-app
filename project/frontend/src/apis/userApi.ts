@@ -78,10 +78,12 @@ export const update = async(data : updateUserData, token:string): Promise<any> =
 //upload endpoint for profile image
 export const upload = async(data : uploadFile, token:string):Promise<any> =>{
     try{
-        const resp = await api.patch('/User/image', data, {headers:{Authorization: `Bearer ${token}`}})
+        console.log("data recieved by upload: ", data)
+        const resp = await api.patch('/User/image', data.image, {headers:{Authorization: `Bearer ${token}`}})
         return resp.data
     }
     catch(err){
+        console.log(err)
         if(axios.isAxiosError(err)){
             if(err.response?.status === 401){
                 //call refresh endpoint

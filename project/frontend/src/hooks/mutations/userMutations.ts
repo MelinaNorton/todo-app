@@ -59,27 +59,34 @@ export const useSignupUser = () =>{
 }
 
 //mutation hook to upload a new profile image
-export const userUpload = () =>{
+export const useUpload = () =>{
     const context = useAuth()
     const qc = useQueryClient()
+    console.log("Mutation triggerd @upload; data: ")
     const mutation = useMutation<string, AxiosError, uploadFile, any>({
         mutationFn: (data) => upload(data, context.token),
         onMutate: async(variables) =>{
             await qc.cancelQueries({queryKey: ['User']})
-            const prev = qc.getQueryData(['User'])
-            const file = variables.image.get('image') as File;
+            const prev = qc.getQueryData<newUser[]>(['User'])
+            const file = variables.image.get('file') as File;
             const previewUrl = URL.createObjectURL(file);
 
-            qc.setQueryData(['User'], (old) =>({
-                ...(old as newUser),
-                image:previewUrl
-            }))
+            qc.setQueryData<newUser[]>(['User'], (old) =>(
+                old!.map((u, i) =>
+                    i === 0
+                    ? {
+                    ...u,
+                image: previewUrl,
+                }
+                : u,
+                )
+             ))
             return {prev}
         },
         onError: (err, data, context) =>{
-            qc.setQueryData(['User'], context?.prev);
+            qc.setQueryData<newUser[]>(['User'], context?.prev);
         },
-        onSettled: () =>{
+        onSuccess: () =>{
             qc.invalidateQueries({queryKey:['User']})
         }
     })

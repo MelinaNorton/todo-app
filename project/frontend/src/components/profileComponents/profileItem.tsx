@@ -5,7 +5,7 @@ import GeneralButton from "../generalButton"
 import { updateUserData } from "@/resources/interfaces/userInterfaces"
 
 type profileItemProps = {
-    label: 'username' | 'firstname' | 'lastname' | 'email',
+    label: 'username' | 'firstname' | 'lastname' | 'email' | 'image',
     text: string
 }
 

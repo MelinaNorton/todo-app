@@ -33,7 +33,7 @@ let UsersController = class UsersController {
         const user = await this.usersService.create(createUserDto);
         return user;
     }
-    async upload(req, _id, file, update) {
+    async upload(req, file, update) {
         console.log(file);
         const imgFile = `/uploads/${file.filename}`;
         console.log("Cookie id extracted in upload controller: ", req.user.sub);
@@ -84,11 +84,10 @@ __decorate([
     })),
     (0, common_1.Patch)('image'),
     __param(0, (0, common_2.Request)()),
-    __param(1, (0, common_1.Query)('_id')),
-    __param(2, (0, common_1.UploadedFile)()),
-    __param(3, (0, common_1.Body)()),
+    __param(1, (0, common_1.UploadedFile)()),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, Object, update_user_dto_1.UpdateUserDto]),
+    __metadata("design:paramtypes", [Object, Object, update_user_dto_1.UpdateUserDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "upload", null);
 __decorate([

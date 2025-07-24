@@ -58,7 +58,7 @@ export class UsersController {
   })
 )
 @Patch('image')
-async upload(@Request() req, @Query('_id') _id:string, @UploadedFile() file:Express.Multer.File, @Body() update: UpdateUserDto){
+async upload(@Request() req, @UploadedFile() file:Express.Multer.File, @Body() update: UpdateUserDto){
   console.log(file)
   const imgFile = `/uploads/${file.filename}`;
   console.log("Cookie id extracted in upload controller: ", req.user.sub)

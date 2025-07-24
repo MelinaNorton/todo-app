@@ -6,7 +6,7 @@ export declare class UsersController {
     private readonly usersService;
     constructor(usersService: UserService);
     create(createUserDto: CreateUserDto): Promise<import("./interface/user.interface").User>;
-    upload(req: any, _id: string, file: Express.Multer.File, update: UpdateUserDto): Promise<import("mongoose").Document<unknown, {}, import("./interface/user.interface").User, {}> & import("./interface/user.interface").User & Required<{
+    upload(req: any, file: Express.Multer.File, update: UpdateUserDto): Promise<import("mongoose").Document<unknown, {}, import("./interface/user.interface").User, {}> & import("./interface/user.interface").User & Required<{
         _id: string;
     }> & {
         __v: number;
