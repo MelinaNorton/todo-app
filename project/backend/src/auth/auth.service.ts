@@ -8,6 +8,7 @@ import { BcryptService } from './providers/bcrypt.service';
 import { User } from 'src/users/interface/user.interface';
 import { Res, Req } from '@nestjs/common';
 import { Response, Request } from 'express';
+
 //defines instances of TokenService, BcryptService, and UserService to carry outh authentication logic
 @Injectable()
 export class AuthService {
@@ -19,7 +20,8 @@ export class AuthService {
 
 //calls our user service's "create" function with the passed-in data
   async signup(createAuthDto: Signup) {
-    return this.userService.create(createAuthDto);
+    const user = await this.userService.create(createAuthDto);
+    //this.listController.create({user_id : user._id})
   }
 
 //validates the login data passed to our function by first 1)validating the existence of the username in our DB, then

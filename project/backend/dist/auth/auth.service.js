@@ -30,7 +30,7 @@ let AuthService = class AuthService {
         this.userService = userService;
     }
     async signup(createAuthDto) {
-        return this.userService.create(createAuthDto);
+        const user = await this.userService.create(createAuthDto);
     }
     async validate(loginAuthDto) {
         const username = loginAuthDto.username;

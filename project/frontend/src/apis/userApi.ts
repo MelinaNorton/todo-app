@@ -1,8 +1,9 @@
 import { api } from '@/resources/helpers/publicResources';
 import axios from 'axios'
-import { loginUser, getUser, updateUserData, uploadFile, newUser } from '@/resources/interfaces/userInterfaces';
+import { loginUser, getUser, updateUserData, uploadFile, newUser, newUserWithList } from '@/resources/interfaces/userInterfaces';
 import { useAuth } from '@/resources/context/authContext';
 import { refresh } from '@/resources/helpers/publicResources';
+import { listItem } from '@/resources/interfaces/todoInterfaces';
 
 
 export const getUsers = async(token:string):Promise<any> =>{
@@ -39,7 +40,9 @@ export const login = async(data : loginUser) =>{
 //signup endpoint
 export const signup = async(data : newUser) =>{
     try{
-        const resp = await api.post('/Auth/signup', data)
+        const emptyList:listItem[] = []
+        const dataWithList = {...data, items:emptyList}
+        const resp = await api.post('/auth/signup', dataWithList)
         return resp.data
     }
     catch(err){

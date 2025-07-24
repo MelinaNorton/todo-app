@@ -1,6 +1,6 @@
 import { update, login, signup, upload } from "@/apis/userApi";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { loginUser, newUser, updateUserData, uploadFile } from "@/resources/interfaces/userInterfaces";
+import { loginUser, newUser, newUserWithList, updateUserData, uploadFile } from "@/resources/interfaces/userInterfaces";
 import { AxiosError } from "axios";
 import { useAuth } from "@/resources/context/authContext";
 

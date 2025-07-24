@@ -43,6 +43,7 @@ export class ListController {
     @UseGuards(AuthGuard('jwt'))
     @Patch('item')
     async updateItem(@Request() req, @Query() filter:FilterToDoListDto, @Body() update: UpdateToDoItemDto){
+        console.log("Hit beginning of list-update endpoint")
         filter.user_id = req.user.sub
         return await this.listService.updateItem(filter, update)
     }

@@ -1,3 +1,4 @@
+'use client'
 import { useUpdateItems } from "@/hooks/mutations/todoMutations"
 import { useDeleteItem } from "@/hooks/mutations/todoMutations"
 
@@ -11,7 +12,7 @@ type listItemProps = {
 export default function ListItem({text,done, item_id, bg}:listItemProps){
     const updater = useUpdateItems()
     const deleter = useDeleteItem()
-    
+    console.log("Item ID poplated for this listItem: ", item_id)
     return(
         <div>
             <div className={`flex flex-row items-center justify-between w-70 h-11 rounded-2xl ${bg} p-4`}>

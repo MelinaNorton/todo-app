@@ -10,6 +10,7 @@ export const useFetchItems = () =>{
     const query = useQuery<listItem[]>({
         queryKey: ['list'],
         queryFn: () => fetchItems(context.token),
+        enabled: !!context.token
     })
     return query
 }

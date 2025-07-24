@@ -3,9 +3,10 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { signupSchema } from '@/resources/schemas/userSchemas';
-import { newUser } from '@/resources/interfaces/userInterfaces';
+import { newUser, newUserWithList } from '@/resources/interfaces/userInterfaces';
 import GeneralButton from './generalButton';
 import { useSignupUser } from '@/hooks/mutations/userMutations';
+import { listItem } from '@/resources/interfaces/todoInterfaces';
 
 export default function SignupForm(){
     const signupUser = useSignupUser()
@@ -21,7 +22,7 @@ export default function SignupForm(){
             password: '',
             email: '',
             firstname: '',
-            lastname: '',
+            lastname: ''
         }
     });
 

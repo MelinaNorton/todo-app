@@ -21,7 +21,7 @@ export interface newItem {
 export interface listItem {
     text:string,
     done:boolean,
-    item_id:string
+    _id:string
 }
 
 export interface listData {

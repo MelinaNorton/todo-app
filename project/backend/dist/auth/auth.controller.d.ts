@@ -8,7 +8,7 @@ export declare class AuthController {
     private readonly authService;
     private readonly tokensService;
     constructor(authService: AuthService, tokensService: TokensService);
-    signup(createAuthDto: Signup): Promise<import("../users/interface/user.interface").User>;
+    signup(createAuthDto: Signup): Promise<void>;
     login(loginAuthDto: Login, res: Response, req: Request): Promise<string>;
     logout(res: Response): Promise<void>;
 }

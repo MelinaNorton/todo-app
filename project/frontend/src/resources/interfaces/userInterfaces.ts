@@ -1,3 +1,5 @@
+import { listItem } from "./todoInterfaces"
+
 export interface loginUser {
     username : string,
     password : string
@@ -24,5 +26,14 @@ export interface newUser {
     firstname : string,
     lastname : string,
     password : string,
-    email : string
+    email : string,
+}
+
+export interface newUserWithList {
+    username : string,
+    firstname : string,
+    lastname : string,
+    password : string,
+    email : string,
+    items : listItem[]
 }

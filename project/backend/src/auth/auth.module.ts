@@ -10,6 +10,9 @@ import { BcryptService } from './providers/bcrypt.service';
 import { TokensService } from 'src/tokens/tokens.service';
 import { TokensModule } from 'src/tokens/tokens.module';
 import { JwtStrategy } from 'src/tokens/strategies/jwt.strategy';
+import { ListService } from 'src/list/list.service';
+import { ListController } from 'src/list/list.controller';
+import { ListModule } from 'src/list/list.module';
 
 @Module({
   imports:[

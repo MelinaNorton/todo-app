@@ -28,7 +28,9 @@ export const fetchItems = async (token:string):Promise<any> =>{
 //updateItems endpoint; refresh/retries on 401
 export const updateItems = async(data : updateItem, token:string):Promise<any> =>{
     try{
-        const resp = await api.patch('/list/update', {params:data, headers:{Authorization: `Bearer ${token}`}})
+        console.log("token sent to updateItems: ", token)
+        const updateData = {done:data.done, text:data.text}
+        const resp = await api.patch('/list/item', updateData,{params: { item_id: data.item_id, user_id: "" },headers: { Authorization: `Bearer ${token}` }});
         return resp.data
     }
     catch(err){

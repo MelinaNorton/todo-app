@@ -42,6 +42,7 @@ let ListController = class ListController {
         return await this.listService.getItems(filter);
     }
     async updateItem(req, filter, update) {
+        console.log("Hit beginning of list-update endpoint");
         filter.user_id = req.user.sub;
         return await this.listService.updateItem(filter, update);
     }
