@@ -18,7 +18,8 @@ export class ListController {
 
     @Post()
     create(@Body() createListDto: CreateListDto) {
-      return this.listService.create(createListDto);
+        console.log("CreateListDto: ", createListDto)
+        return this.listService.create(createListDto);
     }
 //takes user_id & item_id from filter -> passes it to the service, which 1) finds the user via userService then 2) grabs the
 //associated list and 3) returns the requested item_id-item

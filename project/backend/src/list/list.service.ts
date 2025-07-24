@@ -2,7 +2,6 @@ import { ToDo } from "./interface/todoitem.interface";
 import { User } from "src/users/interface/user.interface";
 import { InjectModel } from "@nestjs/mongoose";
 import { UserService } from "src/users/user.service";
-import { FilterUserDto } from "src/users/dto/filter-user.dto";
 import { NotFoundException } from "@nestjs/common";
 import { CreateToDoItemDto } from "./dto/create-todoitem.dto";
 import { Injectable } from "@nestjs/common";
@@ -11,8 +10,6 @@ import { Model } from "mongoose";
 import { FilterToDoListDto } from "./dto/filtertodolist.dto";
 import { List } from "./interface/list.interface";
 import { CreateListDto } from "./dto/create-list.dto";
-import { Inject } from "@nestjs/common";
-import { forwardRef } from "@nestjs/common";
 
 @Injectable()
 export class ListService {

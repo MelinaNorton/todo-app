@@ -26,8 +26,9 @@ let AuthController = class AuthController {
         this.authService = authService;
         this.tokensService = tokensService;
     }
-    signup(createAuthDto) {
-        return this.authService.signup(createAuthDto);
+    async signup(createAuthDto) {
+        const user = await this.authService.signup(createAuthDto);
+        return user;
     }
     async login(loginAuthDto, res, req) {
         console.log("Ran at Backend controller, /auth.controller");
@@ -46,7 +47,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [signup_dto_1.Signup]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signup", null);
 __decorate([
     (0, common_1.HttpCode)(200),

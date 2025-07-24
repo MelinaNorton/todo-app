@@ -16,7 +16,6 @@ const user_service_1 = require("../users/user.service");
 const user_module_1 = require("../users/user.module");
 const users_schema_1 = require("../users/schema/users.schema");
 const bcrypt_service_1 = require("../auth/providers/bcrypt.service");
-const auth_module_1 = require("../auth/auth.module");
 let ListModule = class ListModule {
 };
 exports.ListModule = ListModule;
@@ -26,7 +25,6 @@ exports.ListModule = ListModule = __decorate([
             mongoose_1.MongooseModule.forFeature([{ name: "List", schema: list_schema_1.ListSchema }]),
             user_module_1.UserModule,
             mongoose_1.MongooseModule.forFeature([{ name: "User", schema: users_schema_1.userSchema }]),
-            auth_module_1.AuthModule
         ],
         controllers: [list_controller_1.ListController],
         providers: [list_service_1.ListService, user_service_1.UserService, bcrypt_service_1.BcryptService],

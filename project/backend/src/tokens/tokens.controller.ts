@@ -1,14 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, Res, Req } from '@nestjs/common';
+import { Controller, Post, Res, Req } from '@nestjs/common';
 import { TokensService } from './tokens.service';
-import { CreateTokenDto } from './dto/create-token.dto';
 import { Response } from 'express';
-import { Token } from './interface/tokens.interface';
 import { User } from 'src/users/interface/user.interface';
-import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { JwtAuthGuard } from 'src/auth/guards/jwt.authguard';
 import { JwtRefreshGuard } from './guards/jwt.guards';
 
 @Controller('Token')

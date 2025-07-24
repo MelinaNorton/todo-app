@@ -3,21 +3,18 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UserModule } from 'src/users/user.module';
 import { PassportModule } from '@nestjs/passport';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtRefreshStrategy } from '../tokens/strategies/jwt.refreshStrategy';
 import { BcryptService } from './providers/bcrypt.service';
-import { TokensService } from 'src/tokens/tokens.service';
 import { TokensModule } from 'src/tokens/tokens.module';
 import { JwtStrategy } from 'src/tokens/strategies/jwt.strategy';
-import { ListService } from 'src/list/list.service';
-import { ListController } from 'src/list/list.controller';
 import { ListModule } from 'src/list/list.module';
 
 @Module({
   imports:[
     UserModule,
     TokensModule,
+    ListModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [UserModule, ConfigModule],

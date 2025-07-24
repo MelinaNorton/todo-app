@@ -10,7 +10,7 @@ export declare class AuthService {
     private bcryptService;
     private userService;
     constructor(tokensService: TokensService, bcryptService: BcryptService, userService: UserService);
-    signup(createAuthDto: Signup): Promise<void>;
+    signup(createAuthDto: Signup): Promise<User>;
     validate(loginAuthDto: Login): Promise<User>;
     login(loginAuthoDto: Login, res: Response, req: Request): Promise<{
         token: string;

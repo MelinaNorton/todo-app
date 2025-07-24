@@ -43,6 +43,9 @@ export const signup = async(data : newUser) =>{
         const emptyList:listItem[] = []
         const dataWithList = {...data, items:emptyList}
         const resp = await api.post('/auth/signup', dataWithList)
+        const user_id = resp.data._id
+        console.log("user_id: ", user_id)
+        const list = await api.post('/list', {user_id:user_id})
         return resp.data
     }
     catch(err){

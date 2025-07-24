@@ -17,6 +17,7 @@ const config_1 = require("@nestjs/config");
 const bcrypt_service_1 = require("./providers/bcrypt.service");
 const tokens_module_1 = require("../tokens/tokens.module");
 const jwt_strategy_1 = require("../tokens/strategies/jwt.strategy");
+const list_module_1 = require("../list/list.module");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -25,6 +26,7 @@ exports.AuthModule = AuthModule = __decorate([
         imports: [
             user_module_1.UserModule,
             tokens_module_1.TokensModule,
+            list_module_1.ListModule,
             passport_1.PassportModule.register({ defaultStrategy: 'jwt' }),
             jwt_1.JwtModule.registerAsync({
                 imports: [user_module_1.UserModule, config_1.ConfigModule],

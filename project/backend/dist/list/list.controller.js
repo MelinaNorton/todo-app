@@ -31,6 +31,7 @@ let ListController = class ListController {
         this.userService = userService;
     }
     create(createListDto) {
+        console.log("CreateListDto: ", createListDto);
         return this.listService.create(createListDto);
     }
     async findItem(filter) {
