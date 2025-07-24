@@ -1,98 +1,101 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+**Practice Project** — This NestJS backend is a sandbox demonstrating common server‑side patterns for learning experience
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## Overview
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This repository contains a **NestJS** backend for a TODO application, showcasing:
 
-## Project setup
+* **MongoDB + Mongoose ORM** for schema‑driven data modeling and queries
+* **DTOs, Interfaces, and Schemas** to validate and type incoming/outgoing data
+* **Custom JWT Strategies & Guards** for both access and refresh tokens
+* **Token Management** with a revocation → re‑assignment refresh workflow
+* **Modularization** via dedicated services (e.g., Bcrypt hashing service)
+* **Static File Serving** of user uploads from the `uploads/` folder
+* **Resources** grouped by domain: `User`, `List`, `Token`, `Auth` modules
 
-```bash
-$ npm install
+---
+
+## Key Features
+
+### 1. MongoDB + Mongoose ORM
+
+* Schemas defined via `@Schema()` decorators and Mongoose models
+* Clean separation between data persistence (Mongoose) and business logic (Services)
+
+### 2. DTOs & Validation
+
+* **Data Transfer Objects (DTOs)** implemented with `class-validator` and `class-transformer`
+* Input validation at the controller layer prevents invalid data from hitting services
+
+### 3. Authentication & Authorization
+
+* **JWT Access Token** for short‑lived requests, **Refresh Token** for session continuation
+* Custom `JwtStrategy` classes for each token type
+* **AuthGuard** ensures protected routes can only be accessed with valid tokens
+
+### 4. Token Management Workflow
+
+* **`/auth/refresh`** endpoint that revokes old refresh tokens (database record) and issues new ones
+* Refresh tokens stored in HTTP‑only cookies; access tokens returned in response body
+* Logout endpoint that clears cookies and invalidates refresh tokens
+
+### 5. Modular Design & Services
+
+* **BcryptService** for password hashing and comparison, used by `AuthService`
+* Each domain (`User`, `List`, `Token`, `Auth`) lives in its own module for clarity and scalability
+
+### 6. Static File Serving
+
+* User profile images and other uploads saved to `uploads/` via Multer interceptor
+* Served statically with Nest’s `ServeStaticModule`
+
+---
+
+## Folder Structure
+
+```
+src/
+├── auth/             # JWT strategies, guards, auth controller & service
+├── users/            # User module: controller, service, schemas, DTOs
+├── list/             # List & todo‑item module: controller, service, DTOs
+├── tokens/           # Refresh token module: model, service, DTOs
+├── main.ts           # App bootstrap and global pipes
+├── app.module.ts     # Root module (imports ServeStaticModule)
+uploads/          # Static directory for file uploads
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## Modules & Endpoints
 
-# watch mode
-$ npm run start:dev
+* **AuthModule** (`/auth`)
 
-# production mode
-$ npm run start:prod
-```
+  * `POST /auth/login` → issue tokens
+  * `POST /auth/refresh` → rotate refresh token
+  * `POST /auth/logout` → revoke tokens
+  * `POST /auth/signup` →  create new user
 
-## Run tests
+* **UsersModule** (`/user`)
 
-```bash
-# unit tests
-$ npm run test
+  * `POST /User` → create user
+  * `GET /User/get` → get current user (protected)
+  * `PATCH /User/patch` → update user fields
+  * `PATCH /User/image` → upload profile image
+  * `DELETE /User` → delete user
 
-# e2e tests
-$ npm run test:e2e
+* **ListModule** (`/list`)
 
-# test coverage
-$ npm run test:cov
-```
+  * `POST /list` → create a new list (table entry)
+  * `GET /list/item` → get specific list item
+  * `GET /list/items` → get all items for a given list
+  * `PATCH /list/item` → update a todo item
+  * `DELETE /list/item` → delete a todo item
+  * `POST /list/item` → create & add a new todo item for the given list
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+* **TokenModule** handles refresh token records in MongoDB (revocation logic)
+  * `POST /Token/refreshtoken` → create  & attach a new refresh token
+  * `POST /Token/accesstoken` → create a new access token
+  * `POST /Token/refresh` → refresh workflow
+---
