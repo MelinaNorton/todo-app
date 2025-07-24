@@ -53,7 +53,7 @@ This repository contains a **NestJS** backend for a TODO application, showcasing
 
 ---
 
-## 📁 Folder Structure
+## Folder Structure
 
 ```
 src/
