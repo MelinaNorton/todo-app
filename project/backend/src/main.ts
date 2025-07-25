@@ -15,13 +15,16 @@ async function bootstrap() {
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3004';
   //this is the ioredis client, instantiated BEFORE AppModule- this allows for logs like connections & ready to fire 
   // (which would be missed if grabbed from AppModule)
-  const client = new Redis(redisUrl);
-  client.on('connect',  () => Logger.log('🔌 Redis connecting…'));
-  client.on('ready',    () => Logger.log('✅ Redis ready'));
-  client.on('error',    e => Logger.error(`Redis error: ${e.message}`, e.stack));
-  client.on('reconnecting', () => Logger.warn('♻️ Redis reconnecting…'));
-  client.on('command',  cmd => Logger.debug(`Redis command → ${cmd}`));
-
+  if (redisUrl) {
+    const client = new Redis(redisUrl);
+    client.on('connect',      () => Logger.log('🔌 Redis connecting…','RedisLogger'));
+    client.on('ready',        () => Logger.log('✅ Redis ready','RedisLogger'));
+    client.on('error',        e => Logger.error(`Redis error: ${e.message}`, e.stack,'RedisLogger'));
+    client.on('reconnecting', () => Logger.warn('♻️ Redis reconnecting…','RedisLogger'));
+    client.on('command',      cmd => Logger.debug(`Redis command → ${cmd}`,'RedisLogger'));
+  } else {
+    Logger.warn('No Redis URL configured; skipping Redis client setup','RedisLogger');
+  }
   //our Logger calls above for Redis are "debug" level; in order to see this, we must enable in our app "debug"-level
   //logs, which is not the default
   const app = await NestFactory.create(AppModule, {
@@ -42,7 +45,8 @@ async function bootstrap() {
     skipMissingProperties: true
   }));
 
-  await app.listen(3000);
+  const port = parseInt(process.env.PORT!, 10) || 3000;
+  await app.listen(port);
 }
 
 bootstrap();
