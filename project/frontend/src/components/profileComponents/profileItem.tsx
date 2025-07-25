@@ -25,7 +25,7 @@ export default function ProfileItem({label,text}:profileItemProps){
             </div>
             {changeField ? 
             <div className="flex flex-col space-y-2">
-                <input type="text" placeholder="enter new value" value={newValue} onChange={e => setNewValue(e.target.value)}className="w-full md:w-25 h-7 bg-white rounded-2xl p-2 focus:outline-none focus:ring-0"></input>
+                <input type="text" placeholder="enter new value" value={newValue} onChange={e => setNewValue(e.target.value)}className="text-gray-400 font-semibold w-full md:w-25 h-7 bg-white rounded-2xl p-2 focus:outline-none focus:ring-0"></input>
                 <GeneralButton type="button" text="submit" action={()=>makeChange(newValue)}/>
             </div>
                 : 

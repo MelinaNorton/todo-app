@@ -9,7 +9,7 @@ export default function List(){
     console.log("Data recieved from useFetchItems: ", items)
     const bgcolors =['bg-blue-950/80', 'bg-blue-800/80', 'bg-blue-700/80', 'bg-blue-600/80', 'bg-blue-500/80', 'bg-blue-400/80']
     return(
-        <div className="relative flex flex-col items-center gap-y-4 justify-end h-[40vw] md:h-140 w-80 bg-blue-100 rounded-4xl p-4">
+        <div className="relative flex flex-col items-center gap-y-4 justify-end h-[40vw] md:h-140 w-95 bg-blue-100 rounded-4xl p-4">
             <AddItemForm></AddItemForm>
             <div className="flex flex-col space-y-4 h-100 w-full items-center justify-start overflow-y-scroll [&::-webkit-scrollbar]:hidden p-2">
                 {items?.map((item, i)=>
