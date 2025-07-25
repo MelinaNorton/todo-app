@@ -1,7 +1,7 @@
 'use client'
 import { update, login, signup, upload, logout } from "@/apis/userApi";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { loginUser, newUser, updateUserData, uploadFile } from "@/resources/interfaces/userInterfaces";
+import { loginUser, newUser, updateUserData, uploadFile, user } from "@/resources/interfaces/userInterfaces";
 import { AxiosError } from "axios";
 import { useAuth } from "@/resources/context/authContext";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 export const useUpdateUser = () =>{
     const context = useAuth()
     const qc = useQueryClient()
-    const mutation = useMutation<newUser, AxiosError, updateUserData, any>({
+    const mutation = useMutation<user[], AxiosError, updateUserData, any>({
         mutationFn: (data) => update(data, context.token),
         onMutate: async(variables) =>{
             await qc.cancelQueries({queryKey: ['User']})

@@ -1,10 +1,10 @@
 import { api } from '@/resources/helpers/publicResources';
 import axios from 'axios'
-import { loginUser, updateUserData, uploadFile, newUser } from '@/resources/interfaces/userInterfaces';
+import { loginUser, updateUserData, uploadFile, newUser, user } from '@/resources/interfaces/userInterfaces';
 import { refresh } from '@/resources/helpers/publicResources';
 import { listItem } from '@/resources/interfaces/todoInterfaces';
 
-export const getUsers = async(token:string):Promise<any> =>{
+export const getUsers = async(token:string):Promise<user[]> =>{
     try{
         console.log("Token recieved by getUsers: ", token)
         const resp = await api.get('/User/get', {headers: {Authorization : `Bearer ${token}`}})
@@ -22,6 +22,7 @@ export const getUsers = async(token:string):Promise<any> =>{
                 }
             }
         } 
+        throw err
     }
 }
 
@@ -65,7 +66,7 @@ export const signup = async(data : newUser) =>{
 }
 
 //update user data (uses access token auth header) & refresh/retry on 401
-export const update = async(data : updateUserData, token:string): Promise<any> =>{
+export const update = async(data : updateUserData, token:string): Promise<user[]> =>{
     try{
         const resp = await api.patch('/User/patch', data, {headers: {Authorization: `Bearer ${token}`}})
         return resp.data
@@ -81,11 +82,12 @@ export const update = async(data : updateUserData, token:string): Promise<any> =
                 }
             }
         }
+        throw err
     }
 }
 
 //upload endpoint for profile image
-export const upload = async(data : uploadFile, token:string):Promise<any> =>{
+export const upload = async(data : uploadFile, token:string):Promise<string> =>{
     try{
         console.log("data recieved by upload: ", data)
         const resp = await api.patch('/User/image', data.image, {headers:{Authorization: `Bearer ${token}`}})
@@ -103,5 +105,6 @@ export const upload = async(data : uploadFile, token:string):Promise<any> =>{
                 }
             }
         }
+        throw err
     }
 }

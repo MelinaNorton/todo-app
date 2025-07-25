@@ -27,6 +27,18 @@ export interface newUser {
     lastname : string,
     password : string,
     email : string,
+    image?: string,
+    _id? : string
+}
+
+export interface user {
+    username : string,
+    firstname : string,
+    lastname : string,
+    password : string,
+    email : string,
+    image: string,
+    _id : string
 }
 
 export interface newUserWithList {

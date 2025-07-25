@@ -3,13 +3,13 @@ import { AxiosError } from "axios";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateItem, newItem, deleteItem } from "@/resources/interfaces/todoInterfaces";
 import { useAuth } from "@/resources/context/authContext";
-
+import { listItem } from "@/resources/interfaces/todoInterfaces";
 //mutation hook to update list-item data
 export const useUpdateItems = () =>{
     const context = useAuth()
     
     const qc = useQueryClient()
-    const mutation = useMutation<updateItem, AxiosError, updateItem, any>({
+    const mutation = useMutation<listItem, AxiosError, updateItem, any>({
         mutationFn: (data) => updateItems(data, context.token),
         onMutate: async(variables) =>{
             await qc.cancelQueries({queryKey: ['list']})

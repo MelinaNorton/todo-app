@@ -10,12 +10,17 @@ const ioredis_1 = require("ioredis");
 async function bootstrap() {
     const redisUrl = process.env.REDIS_URL ?? process.env.REDISCLOUD_URL;
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3004';
-    const client = new ioredis_1.default(redisUrl);
-    client.on('connect', () => common_2.Logger.log('🔌 Redis connecting…'));
-    client.on('ready', () => common_2.Logger.log('✅ Redis ready'));
-    client.on('error', e => common_2.Logger.error(`Redis error: ${e.message}`, e.stack));
-    client.on('reconnecting', () => common_2.Logger.warn('♻️ Redis reconnecting…'));
-    client.on('command', cmd => common_2.Logger.debug(`Redis command → ${cmd}`));
+    if (redisUrl) {
+        const client = new ioredis_1.default(redisUrl);
+        client.on('connect', () => common_2.Logger.log('🔌 Redis connecting…', 'RedisLogger'));
+        client.on('ready', () => common_2.Logger.log('✅ Redis ready', 'RedisLogger'));
+        client.on('error', e => common_2.Logger.error(`Redis error: ${e.message}`, e.stack, 'RedisLogger'));
+        client.on('reconnecting', () => common_2.Logger.warn('♻️ Redis reconnecting…', 'RedisLogger'));
+        client.on('command', cmd => common_2.Logger.debug(`Redis command → ${cmd}`, 'RedisLogger'));
+    }
+    else {
+        common_2.Logger.warn('No Redis URL configured; skipping Redis client setup', 'RedisLogger');
+    }
     const app = await core_1.NestFactory.create(app_module_1.AppModule, {
         logger: ['error', 'warn', 'log', 'debug'],
     });
@@ -30,7 +35,8 @@ async function bootstrap() {
         transform: true,
         skipMissingProperties: true
     }));
-    await app.listen(3000);
+    const port = parseInt(process.env.PORT, 10) || 3000;
+    await app.listen(port);
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
