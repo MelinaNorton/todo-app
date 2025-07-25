@@ -6,7 +6,7 @@ import { loginSchema } from '@/resources/schemas/userSchemas';
 import { loginUser } from '@/resources/interfaces/userInterfaces';
 import { useLoginUser } from '@/hooks/mutations/userMutations';
 import GeneralButton from '../generalButton';
-import { useRouter } from 'next/navigation' // for client components
+import { useRouter } from 'next/navigation'
 
 export default function LoginForm(){
     const login = useLoginUser()

@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { listItemSchema } from '@/resources/schemas/listSchemas';
-import { newItem, listItem, listData } from '@/resources/interfaces/todoInterfaces';
+import { listData } from '@/resources/interfaces/todoInterfaces';
 import { useAddItem } from '@/hooks/mutations/todoMutations';
 import GeneralButton from '../generalButton';
 

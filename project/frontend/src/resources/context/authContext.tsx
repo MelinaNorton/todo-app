@@ -1,5 +1,4 @@
 'use client'
-import axios from 'axios'
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { api } from '../helpers/publicResources';
 import { usePathname } from "next/navigation";

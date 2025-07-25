@@ -2,7 +2,6 @@
 import { useUpdateUser } from "@/hooks/mutations/userMutations"
 import { useState } from "react"
 import GeneralButton from "../generalButton"
-import { updateUserData } from "@/resources/interfaces/userInterfaces"
 
 type profileItemProps = {
     label: 'username' | 'firstname' | 'lastname' | 'email' | 'image',

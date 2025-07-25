@@ -2,7 +2,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchItems } from '@/apis/todoApi';
 import { useAuth } from '@/resources/context/authContext';
-import { newItem, listItem } from '@/resources/interfaces/todoInterfaces';
+import { listItem } from '@/resources/interfaces/todoInterfaces';
 
 export const useFetchItems = () =>{
     const context = useAuth()

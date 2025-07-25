@@ -1,6 +1,5 @@
-import { getItems, updateItem, deleteItem, newItem} from "@/resources/interfaces/todoInterfaces";
+import { updateItem, deleteItem, newItem} from "@/resources/interfaces/todoInterfaces";
 import { api } from "@/resources/helpers/publicResources";
-import { useAuth } from "@/resources/context/authContext";
 import { refresh } from "@/resources/helpers/publicResources";
 import axios from 'axios'
 

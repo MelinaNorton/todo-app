@@ -1,7 +1,6 @@
 import { api } from '@/resources/helpers/publicResources';
 import axios from 'axios'
-import { loginUser, getUser, updateUserData, uploadFile, newUser, newUserWithList } from '@/resources/interfaces/userInterfaces';
-import { useAuth } from '@/resources/context/authContext';
+import { loginUser, updateUserData, uploadFile, newUser } from '@/resources/interfaces/userInterfaces';
 import { refresh } from '@/resources/helpers/publicResources';
 import { listItem } from '@/resources/interfaces/todoInterfaces';
 

@@ -1,7 +1,6 @@
 'use client'
 import ListItem from "./listItem"
 import { useFetchItems } from "@/hooks/queries/todoQueries"
-import { newItem } from "@/resources/interfaces/todoInterfaces"
 import AddItemForm from "./addItemForm"
 
 export default function List(){
