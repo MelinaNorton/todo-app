@@ -29,7 +29,7 @@ console.log("User Data: ", user)
                 <ProfileImage src={src}/>
                 <div className="flex flex-col items-center space-y-4 w-full">
                     {userData.map(([field, val,], i)=>
-                        <ProfileItem label={field} text={val}/>
+                        <ProfileItem label={field} text={val} key={i}/>
                     )}
                 </div>
                 <GeneralButton type="button" text="logout" action={()=>logout.mutate()}/>

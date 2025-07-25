@@ -32,7 +32,7 @@ export const AuthProvider = ({children}: {children:ReactNode}) =>{
                 setToken(res.data)
             }
             catch(err){
-                throw new Error("Errors refreshing; log back in to continue using the app")
+                //throw new Error("Errors refreshing; log back in to continue using the app")
             }
         }
 

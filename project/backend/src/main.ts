@@ -11,10 +11,11 @@ import Redis from 'ioredis';
 //and hooks our Validation Pipe into our middleware (whitelist->only decorated (type-defined DTOs aknowledged transform->
 //apply our defined type-conversions & converts incoming JSON->instane of the DTO class)
 async function bootstrap() {
-
+  const redisUrl = process.env.REDIS_URL ?? process.env.REDISCLOUD_URL!;
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3004';
   //this is the ioredis client, instantiated BEFORE AppModule- this allows for logs like connections & ready to fire 
   // (which would be missed if grabbed from AppModule)
-  const client = new Redis(process.env.REDIS_URL!);
+  const client = new Redis(redisUrl);
   client.on('connect',  () => Logger.log('🔌 Redis connecting…'));
   client.on('ready',    () => Logger.log('✅ Redis ready'));
   client.on('error',    e => Logger.error(`Redis error: ${e.message}`, e.stack));
@@ -30,7 +31,7 @@ async function bootstrap() {
   //our other middleware
   app.use(cookieParser());
   app.enableCors({
-    origin: 'http://localhost:3004',//port that we use in frontend
+    origin: frontendUrl,//port that we use in frontend
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 

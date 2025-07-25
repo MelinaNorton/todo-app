@@ -17,6 +17,6 @@ export const refresh = async() =>{
         return resp.data
     }
     catch(err){
-        throw new Error("Errors refreshing access token; log back in to use the app")
+        //throw new Error("Errors refreshing access token; log back in to use the app")
     }
 }

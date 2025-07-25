@@ -8,7 +8,9 @@ const cookieParser = require("cookie-parser");
 const common_2 = require("@nestjs/common");
 const ioredis_1 = require("ioredis");
 async function bootstrap() {
-    const client = new ioredis_1.default(process.env.REDIS_URL);
+    const redisUrl = process.env.REDIS_URL ?? process.env.REDISCLOUD_URL;
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3004';
+    const client = new ioredis_1.default(redisUrl);
     client.on('connect', () => common_2.Logger.log('🔌 Redis connecting…'));
     client.on('ready', () => common_2.Logger.log('✅ Redis ready'));
     client.on('error', e => common_2.Logger.error(`Redis error: ${e.message}`, e.stack));
@@ -19,7 +21,7 @@ async function bootstrap() {
     });
     app.use(cookieParser());
     app.enableCors({
-        origin: 'http://localhost:3004',
+        origin: frontendUrl,
         credentials: true,
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     });
