@@ -1,8 +1,10 @@
-import { update, login, signup, upload } from "@/apis/userApi";
+'use client'
+import { update, login, signup, upload, logout } from "@/apis/userApi";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { loginUser, newUser, newUserWithList, updateUserData, uploadFile } from "@/resources/interfaces/userInterfaces";
 import { AxiosError } from "axios";
 import { useAuth } from "@/resources/context/authContext";
+import { useRouter } from "next/navigation";
 
 //all below mutations, besides login & signup, utilize query-canceling, optimistic patching, and on-error rollbacks
 
@@ -33,14 +35,32 @@ export const useUpdateUser = () =>{
 
 //mutation hook to login user
 export const useLoginUser = () =>{
+    const router = useRouter()
     const context = useAuth()
     const mutation = useMutation<string, AxiosError, loginUser, any>({
         mutationFn: (data) => login(data),
         onError: (err, data, context) =>{
             return err.message;
         },
-        onSettled: (response) =>{
+        onSuccess: (response) =>{
             context.setToken(response ? response : "")
+            router.push('/home')
+        }
+    })
+    return mutation
+}
+
+//mutation hook to logout user
+export const useLogoutUser = () =>{
+    const router = useRouter()
+    const context = useAuth()
+    const mutation = useMutation<void, AxiosError, void>({
+        mutationFn: () => logout(context.token),
+        onError: (err, data, context) =>{
+            return err.message;
+        },
+        onSuccess:()=>{
+            router.push('/login')
         }
     })
     return mutation

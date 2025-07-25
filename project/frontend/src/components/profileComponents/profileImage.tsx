@@ -34,10 +34,10 @@ export default function ProfileImage({src}:profileImageProps){
     }
 
     return(
-        <div className="w-full md:w-25 h-30 rounded-4xl space-y-2">
-            <img src={src} className="rounded-4xl h-15 w-15"></img>
+        <div className="w-full md:w-18 h-18 rounded-4xl space-y-2 items-center justify-center">
+            <img src={src} className="rounded-4xl h-18 w-18"></img>
             <form onSubmit={handleSumbit} className="flex flex-row space-x-2 items-center justify-center">
-                <input type="file" accept="image/*" onChange={setFileChoice} className="w-full md:w-25 h-7 bg-white rounded-4xl"/>
+                <input type="file" accept="image/*" onChange={setFileChoice} className="w-full md:w-25 h-7 bg-white rounded-4xl" placeholder="choose file"/>
                 <GeneralButton type="submit" text="submit"/>
             </form>
         </div>

@@ -5,7 +5,6 @@ import { useAuth } from '@/resources/context/authContext';
 import { refresh } from '@/resources/helpers/publicResources';
 import { listItem } from '@/resources/interfaces/todoInterfaces';
 
-
 export const getUsers = async(token:string):Promise<any> =>{
     try{
         console.log("Token recieved by getUsers: ", token)
@@ -36,6 +35,17 @@ export const login = async(data : loginUser) =>{
     }
     catch(err){
         throw new Error("Errors logging in; check credentials & try again")
+    }
+}
+
+export const logout = async(token:string) =>{
+    try{
+        const resp = await api.post('/Auth/logout')
+
+        return resp.data
+    }
+    catch(err){
+        throw new Error("Errors logging out")
     }
 }
 
