@@ -8,17 +8,20 @@ import { useRouter } from "next/navigation";
 import { useRefresh } from "./refreshMutation";
 //all below mutations, besides login & signup, utilize query-canceling, optimistic patching, and on-error rollbacks
 
+type UpdateUserContext = { prev?: updateUserData }
+type UploadContext = { prev?: newUser[] }
+
 //mutation hook to update user-profile data
 export const useUpdateUser = () =>{
     const context = useAuth()
     const qc = useQueryClient()
     const refresher = useRefresh()
 
-    const mutation = useMutation<user[], AxiosError, updateUserData, any>({
+    const mutation = useMutation<user[], AxiosError, updateUserData, UpdateUserContext>({
         mutationFn: (data) => update(data, context.token),
-        onMutate: async(variables) =>{
+        onMutate: async(variables): Promise<UpdateUserContext> =>{
             await qc.cancelQueries({queryKey: ['User']})
-            const prev = qc.getQueryData(['User'])
+            const prev = qc.getQueryData<updateUserData>(['User']) as | updateUserData | undefined
             qc.setQueryData(['User'], (old) =>({
                 ...(old as updateUserData),
                 ...variables
@@ -91,7 +94,7 @@ export const useUpload = () =>{
     const refresher = useRefresh()
 
     console.log("Mutation triggerd @upload; data: ")
-    const mutation = useMutation<string, AxiosError, uploadFile, any>({
+    const mutation = useMutation<string, AxiosError, uploadFile, UploadContext>({
         mutationFn: (data) => upload(data, context.token),
         onMutate: async(variables) =>{
             await qc.cancelQueries({queryKey: ['User']})
