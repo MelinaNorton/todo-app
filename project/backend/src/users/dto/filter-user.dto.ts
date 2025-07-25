@@ -1,4 +1,4 @@
-import {IsString, IsInt, IsBoolean, Min, Max, IsOptional, IsArray, ValidateNested} from "@nestjs/class-validator";
+import {IsString, IsInt, IsBoolean, Min, Max, IsOptional, IsArray, ValidateNested} from "class-validator";
 import { FilterToDoItemDto } from "../../list/dto/filtertodoitem.dto";
 import { Type } from "class-transformer";
 

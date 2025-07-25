@@ -1,4 +1,4 @@
-import {IsString, IsInt, IsBoolean, Min, Max, IsOptional, IsArray} from "@nestjs/class-validator";
+import {IsString, IsInt, IsBoolean, Min, Max, IsOptional, IsArray} from "class-validator";
 import { ToDo } from "src/list/interface/todoitem.interface";
 import { TodoItemSchema } from "src/list/schema/listitems.schema";
 

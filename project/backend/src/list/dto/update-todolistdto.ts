@@ -1,4 +1,3 @@
-import { PartialType } from '@nestjs/mapped-types';
 import { CreateToDoItemDto } from './create-todoitem.dto';
 import { IsString, IsBoolean, IsOptional } from 'class-validator';
 
