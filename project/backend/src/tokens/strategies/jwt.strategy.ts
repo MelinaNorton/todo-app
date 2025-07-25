@@ -15,7 +15,6 @@ const CookieExtractor = (req : Request): string | null =>{
 
 const LoggingExtractor = (req: Request): string | null => {
   // log whatever the client actually sent
-  console.log('→ RAW auth header:', req.headers.authorization);
   // now invoke the built-in Bearer parser:
   return ExtractJwt.fromAuthHeaderAsBearerToken()(req);
 };
@@ -31,7 +30,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt'){
   }
 
     async validate(payload: any) {
-        console.log("reached validate")
         if(payload.type != "access"){
           throw new UnauthorizedException("Token Type not Valid: Expected Access Token")
         }

@@ -19,6 +19,7 @@ const login_dto_1 = require("./dto/login.dto");
 const signup_dto_1 = require("./dto/signup.dto");
 const common_2 = require("@nestjs/common");
 const tokens_service_1 = require("../tokens/tokens.service");
+const throttler_1 = require("@nestjs/throttler");
 let AuthController = class AuthController {
     authService;
     tokensService;
@@ -31,9 +32,7 @@ let AuthController = class AuthController {
         return user;
     }
     async login(loginAuthDto, res, req) {
-        console.log("Ran at Backend controller, /auth.controller");
         const tokens = await this.authService.login(loginAuthDto, res, req);
-        console.log("Tokens returned to login controller: ", tokens);
         return tokens.accesstoken;
     }
     async logout(res) {
@@ -50,6 +49,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signup", null);
 __decorate([
+    (0, common_1.UseGuards)(throttler_1.ThrottlerGuard),
     (0, common_1.HttpCode)(200),
     (0, common_1.Post)('login'),
     __param(0, (0, common_1.Body)()),

@@ -137,11 +137,9 @@ export class ListService {
             update,
             {new : true, projection: { list: { $slice: -1 }}}
         ).exec()
-        console.log(created)
         if(!created?.list?.length){
             throw new NotFoundException("User for update not found")
         }
-        console.log("Created object: ", created)
         //return the new doc
         return created.list[0]
     }

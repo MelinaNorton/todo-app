@@ -18,6 +18,7 @@ const tokens_service_1 = require("./tokens.service");
 const jwt_1 = require("@nestjs/jwt");
 const common_2 = require("@nestjs/common");
 const jwt_guards_1 = require("./guards/jwt.guards");
+const throttler_1 = require("@nestjs/throttler");
 let TokensController = class TokensController {
     tokensService;
     jwtService;
@@ -35,22 +36,17 @@ let TokensController = class TokensController {
     }
     async refreshAccessToken(req, res) {
         const user = req.user;
-        console.log("old token: ", user);
-        console.log("revoking old token...");
         this.tokensService.revokeRefreshToken(user.jti);
-        console.log("creating new token...");
         const newRefreshToken = await this.tokensService.createToken(user);
         const newRefreshTokenData = this.jwtService.decode(newRefreshToken);
-        console.log("entering data into mongo...");
         const newRefreshTokenDB = this.tokensService.create({ jti: newRefreshTokenData.jti, sub: newRefreshTokenData.sub, username: newRefreshTokenData.username });
-        console.log("creatung new access token...");
         const newAccessToken = this.tokensService.createAccessToken({ sub: user.sub, username: user.username });
         return newAccessToken;
     }
 };
 exports.TokensController = TokensController;
 __decorate([
-    (0, common_2.UseGuards)(jwt_guards_1.JwtRefreshGuard),
+    (0, common_2.UseGuards)(throttler_1.ThrottlerGuard, jwt_guards_1.JwtRefreshGuard),
     (0, common_1.Post)('refreshtoken'),
     __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
@@ -58,13 +54,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], TokensController.prototype, "createAndAttachRefreshToken", null);
 __decorate([
+    (0, common_2.UseGuards)(throttler_1.ThrottlerGuard),
     (0, common_1.Post)('accesstoken'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], TokensController.prototype, "createAccessToken", null);
 __decorate([
-    (0, common_2.UseGuards)(jwt_guards_1.JwtRefreshGuard),
+    (0, common_2.UseGuards)(throttler_1.ThrottlerGuard, jwt_guards_1.JwtRefreshGuard),
     (0, common_1.Post)('refresh'),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),

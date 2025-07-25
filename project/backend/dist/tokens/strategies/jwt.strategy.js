@@ -23,7 +23,6 @@ const CookieExtractor = (req) => {
     return req.cookies['token'] ?? null;
 };
 const LoggingExtractor = (req) => {
-    console.log('→ RAW auth header:', req.headers.authorization);
     return passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken()(req);
 };
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy, 'jwt') {
@@ -37,7 +36,6 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         this.tokensService = tokensService;
     }
     async validate(payload) {
-        console.log("reached validate");
         if (payload.type != "access") {
             throw new common_1.UnauthorizedException("Token Type not Valid: Expected Access Token");
         }

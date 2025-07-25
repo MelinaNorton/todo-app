@@ -40,8 +40,6 @@ let UserService = class UserService {
             ...update,
             image: url,
         };
-        console.log("Update To Be: ", updated);
-        console.log("image URL: ", url);
         const changed = await this.usersModel.findOneAndUpdate({ _id: sub }, { $set: updated }, { new: true });
         if (!changed) {
             throw new common_1.NotFoundException("Image did NOT upload :(");
@@ -65,8 +63,6 @@ let UserService = class UserService {
         if (filter._id != undefined) {
             defined_fields._id = filter._id;
         }
-        console.log("Param Filter: ", filter);
-        console.log("Defined Fields: ", defined_fields);
         return this.usersModel.find(defined_fields).exec();
     }
     async findOne(query) {
@@ -95,7 +91,6 @@ let UserService = class UserService {
         }
     }
     async update(query, updateUserDto) {
-        console.log(updateUserDto);
         const filter = {};
         if (query._id) {
             filter['_id'] = query._id;

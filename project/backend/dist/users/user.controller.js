@@ -24,6 +24,7 @@ const multer_1 = require("multer");
 const path_1 = require("path");
 const passport_1 = require("@nestjs/passport");
 const common_2 = require("@nestjs/common");
+const throttler_1 = require("@nestjs/throttler");
 let UsersController = class UsersController {
     usersService;
     constructor(usersService) {
@@ -34,14 +35,11 @@ let UsersController = class UsersController {
         return user;
     }
     async upload(req, file, update) {
-        console.log(file);
         const imgFile = `/uploads/${file.filename}`;
-        console.log("Cookie id extracted in upload controller: ", req.user.sub);
         return this.usersService.upload(req.user.sub, imgFile, update);
     }
     async findAll(req, item_id) {
         const query = { _id: req.user.sub };
-        console.log("Query from findAll user controller: ", query);
         return await this.usersService.findAll(query);
     }
     update(req, query, updateUserDto) {
@@ -91,7 +89,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "upload", null);
 __decorate([
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, common_1.UseGuards)(throttler_1.ThrottlerGuard, (0, passport_1.AuthGuard)('jwt')),
     (0, common_1.Get)('get'),
     __param(0, (0, common_2.Request)()),
     __param(1, (0, common_1.Query)()),

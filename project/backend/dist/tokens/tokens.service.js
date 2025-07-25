@@ -49,7 +49,6 @@ let TokensService = class TokensService {
     }
     async createToken(user) {
         const jti = (0, crypto_1.randomUUID)();
-        console.log(this.refreshsecret);
         const token = await this.jwtService.sign({ sub: user._id, username: user.username, type: "refresh", jti: jti }, {
             secret: this.refreshsecret,
             expiresIn: this.refreshexpiry,
@@ -74,7 +73,6 @@ let TokensService = class TokensService {
         return true;
     }
     async detatchToken(res) {
-        console.log("RAN!");
         res.clearCookie(this.refreshtokenname, {
             httpOnly: true,
             secure: true,

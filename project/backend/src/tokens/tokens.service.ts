@@ -47,7 +47,6 @@ export class TokensService {
 //sign() function & the .env values pulled using configService
     async createToken(user:User):Promise<string>{
         const jti = randomUUID()
-        console.log(this.refreshsecret)
         const token = await this.jwtService.sign({ sub: user._id, username: user.username, type:"refresh" , jti: jti}, {
             secret: this.refreshsecret,
             expiresIn: this.refreshexpiry,
@@ -76,7 +75,6 @@ export class TokensService {
 
 //detach the authenticated token on logout, again using the Response object
     async detatchToken(@Res({ passthrough: true }) res: Response):Promise<boolean>{
-        console.log("RAN!")
         res.clearCookie(this.refreshtokenname, {
             httpOnly: true,
             secure: true,

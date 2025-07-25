@@ -19,6 +19,10 @@ const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
 const tokens_module_1 = require("./tokens/tokens.module");
 const config_1 = require("@nestjs/config");
+const throttler_1 = require("@nestjs/throttler");
+const throttler_storage_redis_1 = require("@nest-lab/throttler-storage-redis");
+const config_2 = require("@nestjs/config");
+const ioredis_1 = require("ioredis");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -35,6 +39,31 @@ exports.AppModule = AppModule = __decorate([
             }),
             mongoose_1.MongooseModule.forRoot('mongodb+srv://linamelina0707:gfnmEAPfyM3BlMMJ@cluster0.gqer0il.mongodb.net/ToDoDB?retryWrites=true&w=majority'),
             passport_1.PassportModule.register({ defaultStrategy: 'jwt' }),
+            throttler_1.ThrottlerModule.forRootAsync({
+                imports: [config_1.ConfigModule],
+                inject: [config_2.ConfigService],
+                useFactory: async (config) => {
+                    const url = config.get('REDIS_URL');
+                    try {
+                        const client = new ioredis_1.default(url);
+                        await client.ping();
+                        return {
+                            throttlers: [
+                                { limit: 10, ttl: (0, throttler_1.seconds)(60) },
+                            ],
+                            storage: new throttler_storage_redis_1.ThrottlerStorageRedisService(url),
+                        };
+                    }
+                    catch (err) {
+                        console.warn('[Throttler] Redis unavailable, falling back to in‑memory rate‑limiter', err.message);
+                        return {
+                            throttlers: [
+                                { limit: 10, ttl: (0, throttler_1.seconds)(60) },
+                            ],
+                        };
+                    }
+                },
+            }),
             user_module_1.UserModule,
             auth_module_1.AuthModule,
             list_module_1.ListModule,

@@ -8,6 +8,7 @@ import { UserService } from 'src/users/user.service';
 import { CreateListDto } from './dto/create-list.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from '@nestjs/common';
+import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 
 @Controller('list')
 export class ListController {
@@ -18,7 +19,6 @@ export class ListController {
 
     @Post()
     create(@Body() createListDto: CreateListDto) {
-        console.log("CreateListDto: ", createListDto)
         return this.listService.create(createListDto);
     }
 //takes user_id & item_id from filter -> passes it to the service, which 1) finds the user via userService then 2) grabs the
@@ -31,11 +31,10 @@ export class ListController {
 
 //takes user_id from the filter -> passes it to teh service, which 1) finds the user via userService & returns the list
 //w/the matching user_id
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(ThrottlerGuard, AuthGuard('jwt'))
     @Get('items')
     async findItems(@Request() req){
         const filter = {user_id:req.user.sub}
-        console.log("Filter from findItems: ", filter)
         return await this.listService.getItems(filter)
     }
 
@@ -44,7 +43,6 @@ export class ListController {
     @UseGuards(AuthGuard('jwt'))
     @Patch('item')
     async updateItem(@Request() req, @Query() filter:FilterToDoListDto, @Body() update: UpdateToDoItemDto){
-        console.log("Hit beginning of list-update endpoint")
         filter.user_id = req.user.sub
         return await this.listService.updateItem(filter, update)
     }
@@ -63,7 +61,6 @@ export class ListController {
     @UseGuards(AuthGuard('jwt'))
     @Post('item')
     async addItem(@Request() req, @Query() filter:FilterToDoListDto, @Body() createTodo : CreateToDoItemDto){
-        console.log("Backend add controller; dara recieved: ", createTodo)
         filter.user_id = req.user.sub
         return await this.listService.addItem(filter, createTodo)
     }

@@ -29,12 +29,10 @@ export class AuthService {
 //our BcryptService)
   async validate(loginAuthDto: Login):Promise<User>{
     const username = loginAuthDto.username
-    console.log("Ran before findOne")
     const exists = await this.userService.findOne({username})
     if(!exists){
       throw new UnauthorizedException('Invalid Username');
     }
-    console.log("Ran before bcrypt")
     const match = this.bcryptService.comparePasswords(loginAuthDto.password, exists.password)
     if(!match){
       throw new UnauthorizedException('Invalid Password');
@@ -52,10 +50,8 @@ export class AuthService {
       this.tokensService.revokeRefreshToken(existing.jti)
     }
     const newRefreshToken = await this.tokensService.createToken(exists)
-    console.log("Refresh Token Created in login service: ", newRefreshToken)
     this.tokensService.attatchToken(newRefreshToken, res)
     const newAccessToken = await this.tokensService.createAccessToken({sub: exists._id, username:exists.username})
-    console.log("Access Token Created in login service: ", newAccessToken)
     return {token:newRefreshToken, accesstoken:newAccessToken};
   }
 }

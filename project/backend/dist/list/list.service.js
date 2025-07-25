@@ -85,11 +85,9 @@ let ListService = class ListService {
         const update = { $push: { list: createToDo } };
         const user_id = filter.user_id;
         const created = await this.listModel.findOneAndUpdate({ user_id: user_id }, update, { new: true, projection: { list: { $slice: -1 } } }).exec();
-        console.log(created);
         if (!created?.list?.length) {
             throw new common_1.NotFoundException("User for update not found");
         }
-        console.log("Created object: ", created);
         return created.list[0];
     }
 };

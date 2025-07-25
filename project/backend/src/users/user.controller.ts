@@ -10,6 +10,7 @@ import { join } from 'path';
 import { Express } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from '@nestjs/common';
+import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 
 @Controller('User')
 export class UsersController {
@@ -54,18 +55,16 @@ export class UsersController {
 )
 @Patch('image')
 async upload(@Request() req, @UploadedFile() file:Express.Multer.File, @Body() update: UpdateUserDto){
-  console.log(file)
   const imgFile = `/uploads/${file.filename}`;
-  console.log("Cookie id extracted in upload controller: ", req.user.sub)
   return this.usersService.upload(req.user.sub, imgFile, update);
 }
 //get all items- includes empty contingency, since query == {} returns all docs, as well as specific-
 // no need for separate routes
-    @UseGuards(AuthGuard('jwt'))
+
+    @UseGuards(ThrottlerGuard, AuthGuard('jwt'))
     @Get('get')
     async findAll(@Request() req, @Query() item_id:string) {
       const query = {_id:req.user.sub}
-      console.log("Query from findAll user controller: ", query)
       return await this.usersService.findAll(query);
     }
     

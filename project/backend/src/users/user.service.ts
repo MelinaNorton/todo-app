@@ -42,8 +42,6 @@ async upload(sub:string, imgFile:string, update:UpdateUserDto){
       ...update,
       image : url,
     }
-    console.log("Update To Be: ", updated)
-    console.log("image URL: ", url)
     const changed = await this.usersModel.findOneAndUpdate(
       { _id: sub },
       { $set: updated },      
@@ -64,8 +62,6 @@ async upload(sub:string, imgFile:string, update:UpdateUserDto){
     if(filter.lastname != undefined){defined_fields.lastname = filter.lastname}
     if(filter.email != undefined){defined_fields.email = filter.email}
     if(filter._id != undefined){defined_fields._id = filter._id}
-    console.log("Param Filter: ", filter)
-    console.log("Defined Fields: ",defined_fields)
     return this.usersModel.find(defined_fields).exec();
   }
 
@@ -90,7 +86,6 @@ async upload(sub:string, imgFile:string, update:UpdateUserDto){
 //uses a query to zero-in on the iser to be updated, and updates the document using the defined fields of updateUserDto
 //by simply calling findOneAndUpdate() with the variable
   async update(query : FilterUserDto, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto)
     const filter = {}
     if(query._id){filter['_id'] = query._id}
     if(query.username){filter['username'] = query.username}

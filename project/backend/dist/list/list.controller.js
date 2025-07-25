@@ -23,6 +23,7 @@ const user_service_1 = require("../users/user.service");
 const create_list_dto_1 = require("./dto/create-list.dto");
 const passport_1 = require("@nestjs/passport");
 const common_3 = require("@nestjs/common");
+const throttler_1 = require("@nestjs/throttler");
 let ListController = class ListController {
     listService;
     userService;
@@ -31,7 +32,6 @@ let ListController = class ListController {
         this.userService = userService;
     }
     create(createListDto) {
-        console.log("CreateListDto: ", createListDto);
         return this.listService.create(createListDto);
     }
     async findItem(filter) {
@@ -39,11 +39,9 @@ let ListController = class ListController {
     }
     async findItems(req) {
         const filter = { user_id: req.user.sub };
-        console.log("Filter from findItems: ", filter);
         return await this.listService.getItems(filter);
     }
     async updateItem(req, filter, update) {
-        console.log("Hit beginning of list-update endpoint");
         filter.user_id = req.user.sub;
         return await this.listService.updateItem(filter, update);
     }
@@ -52,7 +50,6 @@ let ListController = class ListController {
         return await this.listService.deleteItem(filter);
     }
     async addItem(req, filter, createTodo) {
-        console.log("Backend add controller; dara recieved: ", createTodo);
         filter.user_id = req.user.sub;
         return await this.listService.addItem(filter, createTodo);
     }
@@ -74,7 +71,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ListController.prototype, "findItem", null);
 __decorate([
-    (0, common_2.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, common_2.UseGuards)(throttler_1.ThrottlerGuard, (0, passport_1.AuthGuard)('jwt')),
     (0, common_2.Get)('items'),
     __param(0, (0, common_3.Request)()),
     __metadata("design:type", Function),
