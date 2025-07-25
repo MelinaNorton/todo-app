@@ -52,6 +52,7 @@ let ListController = class ListController {
         return await this.listService.deleteItem(filter);
     }
     async addItem(req, filter, createTodo) {
+        console.log("Backend add controller; dara recieved: ", createTodo);
         filter.user_id = req.user.sub;
         return await this.listService.addItem(filter, createTodo);
     }

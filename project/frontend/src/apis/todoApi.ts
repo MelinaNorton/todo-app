@@ -51,7 +51,7 @@ export const updateItems = async(data : updateItem, token:string):Promise<any> =
 export const deleteItems = async(data : deleteItem, token:string):Promise<any> =>{
 
     try{
-        const resp = await api.delete('/list', {params:data, headers: {Authorization : `Bearer ${token}`}})
+        const resp = await api.delete('/list/item', {params:data, headers: {Authorization : `Bearer ${token}`}})
         return resp.data
     }
     catch(err){
@@ -72,7 +72,8 @@ export const deleteItems = async(data : deleteItem, token:string):Promise<any> =
 export const addItems = async(data : newItem, token:string):Promise<any> =>{
 
     try{
-        const resp = await api.post('/list', {params:data, headers: {Authorization : `Bearer ${token}`}})
+        console.log("Attemp to add a new item")
+        const resp = await api.post('/list/item', data, {headers: {Authorization : `Bearer ${token}`}})
         return resp.data
     }
     catch(err){

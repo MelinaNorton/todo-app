@@ -141,7 +141,7 @@ export class ListService {
         if(!created?.list?.length){
             throw new NotFoundException("User for update not found")
         }
-
+        console.log("Created object: ", created)
         //return the new doc
         return created.list[0]
     }

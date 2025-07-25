@@ -89,6 +89,7 @@ let ListService = class ListService {
         if (!created?.list?.length) {
             throw new common_1.NotFoundException("User for update not found");
         }
+        console.log("Created object: ", created);
         return created.list[0];
     }
 };

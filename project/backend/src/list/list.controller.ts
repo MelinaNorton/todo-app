@@ -63,6 +63,7 @@ export class ListController {
     @UseGuards(AuthGuard('jwt'))
     @Post('item')
     async addItem(@Request() req, @Query() filter:FilterToDoListDto, @Body() createTodo : CreateToDoItemDto){
+        console.log("Backend add controller; dara recieved: ", createTodo)
         filter.user_id = req.user.sub
         return await this.listService.addItem(filter, createTodo)
     }
