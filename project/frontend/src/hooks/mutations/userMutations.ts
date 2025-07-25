@@ -5,13 +5,15 @@ import { loginUser, newUser, updateUserData, uploadFile, user } from "@/resource
 import { AxiosError } from "axios";
 import { useAuth } from "@/resources/context/authContext";
 import { useRouter } from "next/navigation";
-
+import { useRefresh } from "./refreshMutation";
 //all below mutations, besides login & signup, utilize query-canceling, optimistic patching, and on-error rollbacks
 
 //mutation hook to update user-profile data
 export const useUpdateUser = () =>{
     const context = useAuth()
     const qc = useQueryClient()
+    const refresher = useRefresh()
+
     const mutation = useMutation<user[], AxiosError, updateUserData, any>({
         mutationFn: (data) => update(data, context.token),
         onMutate: async(variables) =>{
@@ -23,8 +25,12 @@ export const useUpdateUser = () =>{
             }))
             return {prev}
         },
-        onError: (err, data, context) =>{
+        onError: async(err, data, context) =>{
             qc.setQueryData(['User'], context?.prev);
+            const access = await refresher()
+            if(access){
+                return update(data, access)
+            }
         },
         onSettled: () =>{
             qc.invalidateQueries({queryKey:['User']})
@@ -82,6 +88,8 @@ export const useSignupUser = () =>{
 export const useUpload = () =>{
     const context = useAuth()
     const qc = useQueryClient()
+    const refresher = useRefresh()
+
     console.log("Mutation triggerd @upload; data: ")
     const mutation = useMutation<string, AxiosError, uploadFile, any>({
         mutationFn: (data) => upload(data, context.token),
@@ -103,8 +111,12 @@ export const useUpload = () =>{
              ))
             return {prev}
         },
-        onError: (err, data, context) =>{
+        onError: async(err, data, context) =>{
             qc.setQueryData<newUser[]>(['User'], context?.prev);
+            const access = await refresher()
+                if(access){
+                    return upload(data, access)
+                }
         },
         onSuccess: () =>{
             qc.invalidateQueries({queryKey:['User']})

@@ -12,17 +12,7 @@ export const getUsers = async(token:string):Promise<user[]> =>{
         return resp.data
     }
     catch(err){
-       if(axios.isAxiosError(err)){
-            if(err.response?.status === 401){
-                //call refresh endpoint
-                const access = await refresh()
-                //re-call getUsers endpoint
-                if(access){
-                    return await getUsers(token)
-                }
-            }
-        } 
-        throw err
+       throw err
     }
 }
 
@@ -72,16 +62,6 @@ export const update = async(data : updateUserData, token:string): Promise<user[]
         return resp.data
     }
     catch(err){
-        if(axios.isAxiosError(err)){
-            if(err.response?.status === 401){
-                //call refresh endpoint
-                const access = await refresh()
-                //re-call update endpoint
-                if(access){
-                    return await update(data, token)
-                }
-            }
-        }
         throw err
     }
 }
@@ -94,17 +74,6 @@ export const upload = async(data : uploadFile, token:string):Promise<string> =>{
         return resp.data
     }
     catch(err){
-        console.log(err)
-        if(axios.isAxiosError(err)){
-            if(err.response?.status === 401){
-                //call refresh endpoint
-                const access = await refresh()
-                //re-call update endpoint
-                if(access){
-                    return await upload(data, token)
-                }
-            }
-        }
         throw err
     }
 }

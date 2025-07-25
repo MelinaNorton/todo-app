@@ -1,6 +1,7 @@
 import { updateItem, deleteItem, newItem, listItem} from "@/resources/interfaces/todoInterfaces";
 import { api } from "@/resources/helpers/publicResources";
 import { refresh } from "@/resources/helpers/publicResources";
+import { useRefresh } from "@/hooks/mutations/refreshMutation";
 import axios from 'axios'
 
 //fetch items endpoint; refresh/retries on 401
@@ -11,16 +12,6 @@ export const fetchItems = async (token:string):Promise<listItem[]> =>{
         return resp.data
     }
     catch(err){
-        if(axios.isAxiosError(err)){
-            if(err.response?.status === 401){
-                //call refresh endpoint
-                const access = await refresh()
-                //re-call fetchItems endpoint
-                if(access){
-                    return await fetchItems(access)
-                }
-            }
-        }
         throw err
     }
 }
@@ -34,16 +25,6 @@ export const updateItems = async(data : updateItem, token:string):Promise<listIt
         return resp.data
     }
     catch(err){
-        if(axios.isAxiosError(err)){
-            if(err.response?.status === 401){
-                //call refresh endpoint
-                const access = await refresh()
-                //re-call fetchItems endpoint
-                if(access){
-                    return await updateItems(data, token)
-                }
-            }
-        }
         throw err
     }
 }
@@ -56,16 +37,6 @@ export const deleteItems = async(data : deleteItem, token:string):Promise<listIt
         return resp.data
     }
     catch(err){
-        if(axios.isAxiosError(err)){
-            if(err.response?.status === 401){
-                //call refresh endpoint
-                const access = await refresh()
-                //re-call fetchItems endpoint
-                if(access){
-                    return await deleteItems(data, token)
-                }
-            }
-        }
         throw err
     }
 }
@@ -79,16 +50,6 @@ export const addItems = async(data : newItem, token:string):Promise<listItem> =>
         return resp.data
     }
     catch(err){
-        if(axios.isAxiosError(err)){
-            if(err.response?.status === 401){
-                //call refresh endpoint
-                const access = await refresh()
-                //re-call fetchItems endpoint
-                if(access){
-                    return await addItems(data,token)
-                }
-            }
-        }
         throw err
     }
 }
