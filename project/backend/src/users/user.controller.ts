@@ -8,11 +8,6 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { join } from 'path';
 import { Express } from 'express';
-import { ListService } from 'src/list/list.service';
-import { CreateListDto } from 'src/list/dto/create-list.dto';
-import { ToDo } from 'src/list/interface/todoitem.interface';
-import { Inject } from '@nestjs/common';
-import { forwardRef } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from '@nestjs/common';
 
