@@ -51,6 +51,18 @@ This repository contains a **NestJS** backend for a TODO application, showcasing
 * User profile images and other uploads saved to `uploads/` via Multer interceptor
 * Served statically with Nest’s `ServeStaticModule`
 
+### 7. Rate‑Limiting with Redis & ThrottlerModule
+
+* We use `@nestjs/throttler`’s `ThrottlerModule.forRootAsync()` to configure a **10‑requests-per-60‑seconds** window.
+  * An **async factory** pings Redis at startup; if Redis is reachable it injects a `ThrottlerStorageRedisService` pointed at `REDIS_URL`.  
+  * If the ping fails, it logs a warning and _omits_ the `storage` option, causing Nest to fall back to its in‑memory store.
+* In your controllers you simply decorate protected routes with:
+  ```ts
+  @UseGuards(ThrottlerGuard, AuthGuard('jwt'))
+  @Throttle(5, 60)      // e.g. max 5 calls per minute on this endpoint
+  @Post('login')
+  login() { /* … */ }
+
 ---
 
 ## Folder Structure
