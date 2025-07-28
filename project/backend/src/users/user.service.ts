@@ -36,10 +36,10 @@ export class UserService {
 //builds the appropriate url from with the served image can be accessed, and sends that "src" to the user's document
 //as a string to be pulled for rendering
 async upload(sub:string, imgFile:string, update:UpdateUserDto){
-  const uploadUrl = process.env.BACKEND_URL ?? 'http://localhost:'
-  const port = parseInt(process.env.PORT ?? '3000', 10);
+  //const uploadUrl = process.env.BACKEND_URL ?? 'http://localhost:'
+  //const port = parseInt(process.env.PORT ?? '3000', 10);
     //const url = uploadUrl + port + imgFile;
-    const url = uploadUrl + imgFile;
+    const url = imgFile;
     const updated = {
       ...update,
       image : url,
