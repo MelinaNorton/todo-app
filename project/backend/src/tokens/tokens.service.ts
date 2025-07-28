@@ -70,6 +70,12 @@ export class TokensService {
             maxAge: 7 * 24 * 60 * 60 * 1000,
             path: '/',
         });
+        res.cookie('logged_in', 'true', {
+            httpOnly: false,
+            secure: true,
+            sameSite: 'lax',
+            path: '/',
+        });
         return true;
     }
 
@@ -79,6 +85,12 @@ export class TokensService {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
+            path: '/',
+        })
+        res.clearCookie('logged_in', {
+            httpOnly: false,
+            secure: true,
+            sameSite: 'lax',
             path: '/',
         })
         return true
