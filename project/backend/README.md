@@ -12,7 +12,7 @@ This repository contains a **NestJS** backend for a TODO application, showcasing
 * **Custom JWT Strategies & Guards** for both access and refresh tokens
 * **Token Management** with a revocation → re‑assignment refresh workflow
 * **Modularization** via dedicated services (e.g., Bcrypt hashing service)
-* **Static File Serving** of user uploads from the `uploads/` folder
+* **Cloudinary‑Backed File Storage** for user uploads via Cloudinary’s CDN (no local disk)  
 * **Resources** grouped by domain: `User`, `List`, `Token`, `Auth` modules
 
 ---
