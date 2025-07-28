@@ -21,10 +21,6 @@ import { ThrottlerModuleOptions } from '@nestjs/throttler';
 //modules within our progran, User & Auth and the App controller/provider
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
-      serveRoot: '/uploads',
-    }),
     ConfigModule.forRoot({
       isGlobal:     true,
       envFilePath:  'app.env',
