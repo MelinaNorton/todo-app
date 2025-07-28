@@ -11,6 +11,26 @@ import { Express } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from '@nestjs/common';
 import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const cloudStorage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => {
+    return {
+      folder: 'profiles',
+      format: file.mimetype.split('/')[1],
+      public_id: `profile_${Date.now()}`,
+    };
+  }
+})
+
 
 @Controller('User')
 export class UsersController {
@@ -34,17 +54,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor("file", {
-      storage: diskStorage({
-        destination: (req, file, cb) => {
-          const uploadPath = join(process.cwd(), 'uploads');
-        cb(null, uploadPath);
-      },
-        filename: (_req, file, cb) => {
-          const suffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-          const extension = file.originalname.split(".").pop();
-          cb(null,`${'profile'}-${suffix}.${extension}`)
-        },
-      }),
+      storage: cloudStorage,
       fileFilter: (_req, file, cb) => {
         if(!file.mimetype.startsWith("image/")){
         return cb(new BadRequestException("Wrong File Type"), false);
@@ -55,8 +65,8 @@ export class UsersController {
 )
 @Patch('image')
 async upload(@Request() req, @UploadedFile() file:Express.Multer.File, @Body() update: UpdateUserDto){
-  const imgFile = `/uploads/${file.filename}`;
-  return this.usersService.upload(req.user.sub, imgFile, update);
+  const imgUrl = file.path 
+  return this.usersService.upload(req.user.sub, imgUrl, update);
 }
 //get all items- includes empty contingency, since query == {} returns all docs, as well as specific-
 // no need for separate routes
