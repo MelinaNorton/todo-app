@@ -73,7 +73,7 @@ export class TokensService {
         res.cookie('logged_in', 'true', {
             httpOnly: false,
             secure: true,
-            sameSite: 'lax',
+            sameSite: 'none',
             path: '/',
         });
         return true;
