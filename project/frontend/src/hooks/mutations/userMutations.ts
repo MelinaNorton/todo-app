@@ -54,7 +54,8 @@ export const useLoginUser = () =>{
         },
         onSuccess: (response) =>{
             context.setToken(response ? response : "")
-            qc.invalidateQueries({queryKey:['User']})
+            qc.invalidateQueries({queryKey:['User', context.token]})
+            qc.clear()
             router.push('/home')
         }
     })
