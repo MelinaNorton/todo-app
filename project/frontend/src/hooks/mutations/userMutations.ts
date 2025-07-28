@@ -77,11 +77,15 @@ export const useLogoutUser = () =>{
 
 //mutation hook to create a new user
 export const useSignupUser = () =>{
+    const router = useRouter()
     const qc = useQueryClient()
     const mutation = useMutation<newUser, AxiosError, newUser, undefined>({
         mutationFn: (data) => signup(data),
         onError: (err, data, context) =>{
             return err.message
+        },
+        onSuccess:() =>{
+            router.push('/login')
         }
     })
     return mutation

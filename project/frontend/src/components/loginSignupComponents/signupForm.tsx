@@ -13,6 +13,7 @@ export default function SignupForm(){
     const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
     } = useForm<newUser>({
         resolver: yupResolver(signupSchema),
@@ -27,6 +28,7 @@ export default function SignupForm(){
 
     const onSubmit = (data : newUser) =>{
         signupUser.mutate(data)
+        reset()
     }
 
     return(
