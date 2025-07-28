@@ -8,7 +8,7 @@ export const useGetUsers = () =>{
     const context = useAuth()
     console.log("Token sent to useGetUsers: ", context.token)
     const query = useQuery({
-        queryKey: ['User'],
+        queryKey: ['User', context.token],
         queryFn: () => getUsers(context.token),
         enabled: !!context.token
     })

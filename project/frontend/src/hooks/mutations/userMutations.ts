@@ -46,6 +46,7 @@ export const useUpdateUser = () =>{
 export const useLoginUser = () =>{
     const router = useRouter()
     const context = useAuth()
+    const qc = useQueryClient()
     const mutation = useMutation<string, AxiosError, loginUser, string>({
         mutationFn: (data) => login(data),
         onError: (err, data, context) =>{
@@ -53,6 +54,7 @@ export const useLoginUser = () =>{
         },
         onSuccess: (response) =>{
             context.setToken(response ? response : "")
+            qc.invalidateQueries({queryKey:['User']})
             router.push('/home')
         }
     })
@@ -63,12 +65,14 @@ export const useLoginUser = () =>{
 export const useLogoutUser = () =>{
     const router = useRouter()
     const context = useAuth()
+    const qc = useQueryClient()
     const mutation = useMutation<void, AxiosError, void>({
         mutationFn: () => logout(context.token),
         onError: (err, data, context) =>{
             return err.message;
         },
         onSuccess:()=>{
+            qc.clear()
             router.push('/login')
         }
     })
