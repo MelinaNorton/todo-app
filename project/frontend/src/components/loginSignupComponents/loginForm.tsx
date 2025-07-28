@@ -26,7 +26,7 @@ export default function LoginForm(){
 
     const onSubmit = (data : loginUser) =>{
         login.mutate(data)
-        router.push('/home')
+        //router.push('/home')
     }
 
     return(
