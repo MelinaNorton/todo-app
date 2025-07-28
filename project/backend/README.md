@@ -111,3 +111,14 @@ uploads/          # Static directory for file uploads
   * `POST /Token/accesstoken` → create a new access token
   * `POST /Token/refresh` → refresh workflow
 ---
+
+## Deployment
+
+* **API Deployment** on Heroku at **https://api.portofolkodimi.com**  
+* **CI/CD**: pushes to `main` branch trigger automatic build & deploy, with SSL provisioned  
+* **Environment Variables** (Heroku Config Vars):
+  - `MONGO_URI`  
+  - `JWT_ACCESS_SECRET`, `JWT_ACCESS_EXPIRES`  
+  - `JWT_REFRESH_SECRET`, `JWT_REFRESH_EXPIRES`  
+  - `REDIS_URL`  
+  - `FRONTEND_URL=https://portofolkodimi.com`  

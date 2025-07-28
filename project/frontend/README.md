@@ -84,9 +84,20 @@ This repository contains the **Practice Frontend** for a full‑stack TODO appli
 ---
 
 
+---
+
+## Deployment
+
+* **Production Deployment** on Vercel at **https://portofolkodimi.com**  
+* **Preview Deployments** automatically created for each branch/PR  
+* **CI/CD**: pushes to `main` trigger automatic builds & deployments  
+* **Environment Variables** (set in Vercel Dashboard):  
+  - `NEXT_PUBLIC_BACKEND_URL=https://api.portofolkodimi.com`
+
+---
+
 3. **Explore**
 
    * `/login`, `/signup` (public)
    * `/todos`, `/profile` (protected via auth guard)
 
----
