@@ -2,7 +2,7 @@ import axios from 'axios'
 
 //api const to be used across the app w/base URL & refresh token included
 export const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   withCredentials: true,
 });
 
