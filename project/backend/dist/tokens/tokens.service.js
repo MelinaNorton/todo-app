@@ -64,29 +64,19 @@ let TokensService = class TokensService {
     }
     async attatchToken(token, res) {
         res.cookie(this.refreshtokenname, token, {
+            domain: '.portofolkodimi.com',
             httpOnly: true,
             secure: true,
             sameSite: 'none',
             maxAge: 7 * 24 * 60 * 60 * 1000,
             path: '/',
         });
-        res.cookie('logged_in', 'true', {
-            httpOnly: false,
-            secure: true,
-            sameSite: 'none',
-            path: '/',
-        });
         return true;
     }
     async detatchToken(res) {
         res.clearCookie(this.refreshtokenname, {
+            domain: '.portofolkodimi.com',
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: '/',
-        });
-        res.clearCookie('logged_in', {
-            httpOnly: false,
             secure: true,
             sameSite: 'none',
             path: '/',

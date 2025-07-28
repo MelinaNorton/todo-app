@@ -64,16 +64,11 @@ export class TokensService {
 //actual logic for attaching the above-created token to the Response object with our desired parameters
     async attatchToken(token:string, res: Response):Promise<boolean>{
         res.cookie(this.refreshtokenname, token, {
+            domain: '.portofolkodimi.com',
             httpOnly: true,
             secure: true,
             sameSite: 'none',
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            path: '/',
-        });
-        res.cookie('logged_in', 'true', {
-            httpOnly: false,
-            secure: true,
-            sameSite: 'none',
             path: '/',
         });
         return true;
@@ -82,13 +77,8 @@ export class TokensService {
 //detach the authenticated token on logout, again using the Response object
     async detatchToken(@Res({ passthrough: true }) res: Response):Promise<boolean>{
         res.clearCookie(this.refreshtokenname, {
+            domain: '.portofolkodimi.com',
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: '/',
-        })
-        res.clearCookie('logged_in', {
-            httpOnly: false,
             secure: true,
             sameSite: 'none',
             path: '/',
