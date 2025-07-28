@@ -88,7 +88,7 @@ let TokensService = class TokensService {
         res.clearCookie('logged_in', {
             httpOnly: false,
             secure: true,
-            sameSite: 'lax',
+            sameSite: 'none',
             path: '/',
         });
         return true;
