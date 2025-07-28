@@ -2,22 +2,26 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
+    const { nextUrl: url, cookies } = request
+    const token = cookies.get('refreshtoken')?.value
+    const { pathname } = url
 
-    const token = request.cookies.get('refreshtoken')?.value;
-    if (!token) {
-        if (!['/login', '/signup'].includes(request.nextUrl.pathname)) {
-            return NextResponse.redirect(new URL('/login', request.url));
-        }
-        return NextResponse.next();
+    if (pathname === '/') {
+        url.pathname = token ? '/home' : '/login'
+        return NextResponse.redirect(url)
     }
-    else if (token) {
-        if (request.nextUrl.pathname == "/login") {
-            return NextResponse.redirect(new URL('/home', request.url));
-        }
-        else {
-            return NextResponse.next();
-        }
-    }
+
+  if (!token && pathname !== '/login' && pathname !== '/signup') {
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
+  if (token && (pathname === '/login' || pathname === '/signup')) {
+    url.pathname = '/home'
+    return NextResponse.redirect(url)
+  }
+
+  return NextResponse.next()
 }
 
 export const config = {
