@@ -55,7 +55,6 @@ export const useLoginUser = () =>{
         onSuccess: (response) =>{
             context.setToken(response ? response : "")
             qc.invalidateQueries({queryKey:['User', context.token]})
-            qc.clear()
             router.push('/home')
         }
     })
@@ -73,7 +72,7 @@ export const useLogoutUser = () =>{
             return err.message;
         },
         onSuccess:()=>{
-            qc.clear()
+            qc.invalidateQueries({queryKey:['User', context.token]})
             router.push('/login')
         }
     })
@@ -83,7 +82,6 @@ export const useLogoutUser = () =>{
 //mutation hook to create a new user
 export const useSignupUser = () =>{
     const router = useRouter()
-    const qc = useQueryClient()
     const mutation = useMutation<newUser, AxiosError, newUser, undefined>({
         mutationFn: (data) => signup(data),
         onError: (err, data, context) =>{
