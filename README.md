@@ -60,7 +60,11 @@ cd frontend && npm run dev
 
 The backend API was evaluated under simulated production load using [k6](https://k6.io/).
 
-**Test Configuration:**
+---
+
+### **Load Test (Sustained Traffic)**
+
+**Configuration:**
 - **Environment:** Hosted backend (Heroku) with production configuration  
 - **Load Profile:** 50 virtual users (VUs) over 1 minute sustained traffic  
 - **Endpoints Tested:** `POST /auth/login` (initial auth), `GET /list/items` (authenticated resource)  
@@ -78,13 +82,35 @@ The backend API was evaluated under simulated production load using [k6](https:/
   - Max: 965 ms (isolated outlier)  
 
 **Summary:**
-> The API sustained 50 concurrent virtual users with a 99.6% success rate and maintained p95 latency under 175 ms during load testing on the production‑hosted environment.
+> API sustained 50 concurrent virtual users with 99.6% success rate and p95 latency under 175 ms during sustained load test.
 
 ---
 
-## **How to Run the Load Test**
+### **Workflow Test (Full CRUD Cycle)**
 
-This project includes a `k6` load testing script to evaluate API performance under concurrent user load.
+**Configuration:**
+- **Environment:** Hosted backend (Heroku) with production configuration  
+- **Workflow Simulated:** Login → Get Items → Add Item → Delete Item  
+- **Load Profile:** 50 virtual users (VUs) executing full workflow for 90 seconds  
+
+**Results:**
+- **Total API Calls:** 3,295 across all CRUD actions  
+- **Success Rate:** 100% (all login, GET, POST, DELETE checks succeeded)  
+- **Throughput:** ~36 requests/second sustained  
+- **Latency:**  
+  - Average: 298 ms  
+  - p90: 786 ms  
+  - p95: 818 ms  
+  - Max: ~1.02 s (isolated slow request during writes)  
+
+**Summary:**
+> API sustained 50 concurrent authenticated workflows (login, create, fetch, delete) with 100% success rate and p95 latency <820 ms during production‑hosted workflow test.
+
+---
+
+## **How to Run the Tests**
+
+Both tests are implemented in `k6` and included in the repo.
 
 **Prerequisites:**
 - [Install k6](https://k6.io/docs/get-started/installation/)  
@@ -92,22 +118,14 @@ This project includes a `k6` load testing script to evaluate API performance und
   - **Windows (winget):** `winget install k6`  
   - **Windows (Chocolatey):** `choco install k6`
 
-**Test Script Location:**
+**Test Script Locations:**
 
-backend/src/test/load_test.js
+backend/src/test/load_test.js # Sustained load test
+backend/src/test/workflow_test.js # Full CRUD workflow test
 
 
-**Script Overview:**
-- Authenticates once in `setup()` using a test account (`POST /auth/login`)  
-- Stores access token for all Virtual Users  
-- Performs authenticated `GET /list/items` requests under sustained load  
-- Tracks success rate and latency percentiles
-
-**Run the Test:**
+**Run a Test:**
 From the backend root:
 ```bash
 k6 run src/test/load_test.js
-
-checks.....................: 99.6% ✓ 3040 ✗ 11
-http_reqs..................: 1,526 requests
-http_req_duration..........: avg=152ms p(95)=173ms
+k6 run src/test/workflow_test.js
