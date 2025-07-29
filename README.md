@@ -56,3 +56,76 @@ cd frontend && npm run dev
 
 ---
 
+## **Performance Testing**
+
+The backend API was evaluated under simulated production load using [k6](https://k6.io/).
+
+---
+
+### **Load Test (Sustained Traffic)**
+
+**Configuration:**
+- **Environment:** Hosted backend (Heroku) with production configuration  
+- **Load Profile:** 50 virtual users (VUs) over 1 minute sustained traffic  
+- **Endpoints Tested:** `POST /auth/login` (initial auth), `GET /list/items` (authenticated resource)  
+- **Authentication:** JWT (access token valid through full test duration)  
+- **Rate Limiting:** Temporarily increased for load evaluation  
+
+**Results:**
+- **Total Requests:** 1,526 successful API calls  
+- **Success Rate:** 99.6% (`3040/3051` checks succeeded)  
+- **Throughput:** ~21 requests/second sustained  
+- **Latency:**  
+  - Average: 152 ms  
+  - p90: 161 ms  
+  - p95: 173 ms  
+  - Max: 965 ms (isolated outlier)  
+
+**Summary:**
+> API sustained 50 concurrent virtual users with 99.6% success rate and p95 latency under 175 ms during sustained load test.
+
+---
+
+### **Workflow Test (Full CRUD Cycle)**
+
+**Configuration:**
+- **Environment:** Hosted backend (Heroku) with production configuration  
+- **Workflow Simulated:** Login → Get Items → Add Item → Delete Item  
+- **Load Profile:** 50 virtual users (VUs) executing full workflow for 90 seconds  
+
+**Results:**
+- **Total API Calls:** 3,295 across all CRUD actions  
+- **Success Rate:** 100% (all login, GET, POST, DELETE checks succeeded)  
+- **Throughput:** ~36 requests/second sustained  
+- **Latency:**  
+  - Average: 298 ms  
+  - p90: 786 ms  
+  - p95: 818 ms  
+  - Max: ~1.02 s (isolated slow request during writes)  
+
+**Summary:**
+> API sustained 50 concurrent authenticated workflows (login, create, fetch, delete) with 100% success rate and p95 latency <820 ms during production‑hosted workflow test.
+
+---
+
+## **How to Run the Tests**
+
+Both tests are implemented in `k6` and included in the repo.
+
+**Prerequisites:**
+- [Install k6](https://k6.io/docs/get-started/installation/)  
+  - **Mac (Homebrew):** `brew install k6`  
+  - **Windows (winget):** `winget install k6`  
+  - **Windows (Chocolatey):** `choco install k6`
+
+**Test Script Locations:**
+
+- **backend/src/test/load_test.js** # Sustained load test
+- **backend/src/test/workflow_test.js** # Full CRUD workflow test
+
+
+**Run a Test:**
+From the backend root:
+```bash
+k6 run src/test/load_test.js
+k6 run src/test/workflow_test.js
