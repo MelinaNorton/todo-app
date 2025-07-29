@@ -40,7 +40,7 @@ import { ThrottlerModuleOptions } from '@nestjs/throttler';
           await client.ping();
           return {
             throttlers: [
-              { limit: 10, ttl: seconds(60) },  // still 10 requests per 60s
+              { limit: Number.MAX_SAFE_INTEGER, ttl: seconds(60) },  // test values
             ],
             storage: new ThrottlerStorageRedisService(url),
           };

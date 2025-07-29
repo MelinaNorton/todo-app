@@ -15,8 +15,6 @@ const user_module_1 = require("./users/user.module");
 const passport_1 = require("@nestjs/passport");
 const auth_module_1 = require("./auth/auth.module");
 const list_module_1 = require("./list/list.module");
-const serve_static_1 = require("@nestjs/serve-static");
-const path_1 = require("path");
 const tokens_module_1 = require("./tokens/tokens.module");
 const config_1 = require("@nestjs/config");
 const throttler_1 = require("@nestjs/throttler");
@@ -29,10 +27,6 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            serve_static_1.ServeStaticModule.forRoot({
-                rootPath: (0, path_1.join)(__dirname, '..', 'uploads'),
-                serveRoot: '/uploads',
-            }),
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
                 envFilePath: 'app.env',

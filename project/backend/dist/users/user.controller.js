@@ -20,11 +20,26 @@ const update_user_dto_1 = require("./dto/update-user.dto");
 const filter_user_dto_1 = require("./dto/filter-user.dto");
 const jwt_authguard_1 = require("../auth/guards/jwt.authguard");
 const platform_express_1 = require("@nestjs/platform-express");
-const multer_1 = require("multer");
-const path_1 = require("path");
 const passport_1 = require("@nestjs/passport");
 const common_2 = require("@nestjs/common");
 const throttler_1 = require("@nestjs/throttler");
+const cloudinary_1 = require("cloudinary");
+const multer_storage_cloudinary_1 = require("multer-storage-cloudinary");
+cloudinary_1.v2.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+const cloudStorage = new multer_storage_cloudinary_1.CloudinaryStorage({
+    cloudinary: cloudinary_1.v2,
+    params: async (req, file) => {
+        return {
+            folder: 'profiles',
+            format: file.mimetype.split('/')[1],
+            public_id: `profile_${Date.now()}`,
+        };
+    }
+});
 let UsersController = class UsersController {
     usersService;
     constructor(usersService) {
@@ -35,8 +50,8 @@ let UsersController = class UsersController {
         return user;
     }
     async upload(req, file, update) {
-        const imgFile = `/uploads/${file.filename}`;
-        return this.usersService.upload(req.user.sub, imgFile, update);
+        const imgUrl = file.path;
+        return this.usersService.upload(req.user.sub, imgUrl, update);
     }
     async findAll(req, item_id) {
         const query = { _id: req.user.sub };
@@ -62,17 +77,7 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(jwt_authguard_1.JwtAuthGuard),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)("file", {
-        storage: (0, multer_1.diskStorage)({
-            destination: (req, file, cb) => {
-                const uploadPath = (0, path_1.join)(process.cwd(), 'uploads');
-                cb(null, uploadPath);
-            },
-            filename: (_req, file, cb) => {
-                const suffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-                const extension = file.originalname.split(".").pop();
-                cb(null, `${'profile'}-${suffix}.${extension}`);
-            },
-        }),
+        storage: cloudStorage,
         fileFilter: (_req, file, cb) => {
             if (!file.mimetype.startsWith("image/")) {
                 return cb(new common_1.BadRequestException("Wrong File Type"), false);

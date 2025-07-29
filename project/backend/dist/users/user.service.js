@@ -34,9 +34,7 @@ let UserService = class UserService {
         return newUser;
     }
     async upload(sub, imgFile, update) {
-        const uploadUrl = process.env.BACKEND_URL ?? 'http://localhost:';
-        const port = parseInt(process.env.PORT ?? '3000', 10);
-        const url = uploadUrl + imgFile;
+        const url = imgFile;
         const updated = {
             ...update,
             image: url,
