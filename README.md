@@ -120,8 +120,8 @@ Both tests are implemented in `k6` and included in the repo.
 
 **Test Script Locations:**
 
-backend/src/test/load_test.js # Sustained load test
-backend/src/test/workflow_test.js # Full CRUD workflow test
+- **backend/src/test/load_test.js** # Sustained load test
+- **backend/src/test/workflow_test.js** # Full CRUD workflow test
 
 
 **Run a Test:**
