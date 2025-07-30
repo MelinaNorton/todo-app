@@ -160,8 +160,8 @@ export class ListService {
         }
 
         //handle cache
-        await this.redis.del(`list:${user_id}`); // optional
-        await this.redis.set(`list:${user_id}`, JSON.stringify(created.list), 'EX', 300);
+        const fullList = await this.listModel.findOne({ user_id }, { list: 1, _id: 0 }).lean();
+        await this.redis.set(`list:${user_id}`, JSON.stringify(fullList?.list), 'EX', 300);
 
         //return the new doc
         return created.list[0]
