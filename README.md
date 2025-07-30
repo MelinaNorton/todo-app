@@ -51,7 +51,7 @@ cd frontend && npm run dev
 
 ## Key Features
 
-* **Backend**: Schema-driven MongoDB with Mongoose, DTO validation, modular services (Bcrypt, Token), JWT access & refresh strategies, refresh‑revoke workflow, static file serving.
+* **Backend**: Schema‑driven MongoDB with Mongoose, DTO validation, modular services (Bcrypt, Token), JWT access & refresh strategies with refresh‑revoke workflow, cloud file storage (Cloudinary), API rate‑limiting (Redis), and MongoDB query caching for high‑traffic endpoints (Redis)
 * **Frontend**: Secure token management with Axios interceptors, automatic retry on 401, React Query hooks with cache invalidation and optimistic updates + rollbacks, Tailwind styling, Yup form validation, Next.js middleware and route protection, global AuthContext.
 
 ---
@@ -70,7 +70,6 @@ The backend API was evaluated under simulated production load using [k6](https:/
 - **Endpoints Tested:** `POST /auth/login` (initial auth), `GET /list/items` (authenticated resource)  
 - **Authentication:** JWT (access token valid through full test duration)  
 - **Rate Limiting:** Temporarily increased for load evaluation
-- **Redis Caching** mananges cache for read-heavy operations
 
 **Results:**
 - **Total Requests:** 1,526 successful API calls  
