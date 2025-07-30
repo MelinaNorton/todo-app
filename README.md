@@ -69,7 +69,8 @@ The backend API was evaluated under simulated production load using [k6](https:/
 - **Load Profile:** 50 virtual users (VUs) over 1 minute sustained traffic  
 - **Endpoints Tested:** `POST /auth/login` (initial auth), `GET /list/items` (authenticated resource)  
 - **Authentication:** JWT (access token valid through full test duration)  
-- **Rate Limiting:** Temporarily increased for load evaluation  
+- **Rate Limiting:** Temporarily increased for load evaluation
+- **Redis Caching** mananges cache for read-heavy operations
 
 **Results:**
 - **Total Requests:** 1,526 successful API calls  
