@@ -67,18 +67,18 @@ export class ListService {
         const cached = await this.redis.get(cacheKey);
 
         if (cached) {
-        return JSON.parse(cached); // Return cached list
+            return JSON.parse(cached); // Return cached list
         }
 
         //find the list with the given user_id
-        const found = await this.listModel.findOne({user_id : user_id}).exec()
+        const found = await this.listModel.findOne({ user_id }, { list: 1, _id: 0 }).lean();
 
         if(!found){
              throw new NotFoundException("No Lust found associated with User")
         }
 
         //log result -> cache
-        await this.redis.set(cacheKey, JSON.stringify(found.list), 'EX', 60); // Cache for 60s
+        await this.redis.set(cacheKey, JSON.stringify(found.list), 'EX', 300); // Cache for 300s
 
         //return the list[] associated with the returned List object
         return found.list
@@ -107,6 +107,9 @@ export class ListService {
             throw new NotFoundException('List item not found for this user');
         }
 
+        //invalidate cache
+        await this.redis.del(`list:${user_id}`);
+        
         //return the new item
         return updated 
     }
@@ -128,6 +131,9 @@ export class ListService {
         if(!deleted){
             throw new NotFoundException("List item not found on this user")
         }
+
+        //handle cache
+        await this.redis.del(`list:${user_id}`);
 
         //return the doc
         return deleted
@@ -152,6 +158,11 @@ export class ListService {
         if(!created?.list?.length){
             throw new NotFoundException("User for update not found")
         }
+
+        //handle cache
+        await this.redis.del(`list:${user_id}`); // optional
+        await this.redis.set(`list:${user_id}`, JSON.stringify(created.list), 'EX', 300);
+
         //return the new doc
         return created.list[0]
     }
