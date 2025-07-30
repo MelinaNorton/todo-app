@@ -106,6 +106,25 @@ The backend API was evaluated under simulated production load using [k6](https:/
 **Summary:**
 > API sustained 50 concurrent authenticated workflows (login, create, fetch, delete) with 100% success rate and p95 latency <820 ms during production‑hosted workflow test.
 
+### **Soak Test (Long-Duration Stability)**
+
+**Configuration:**
+- **Environment:** Hosted backend (Heroku) with production configuration  
+- **Load Profile:** 20 virtual users (VUs) sustained over 30 minutes  
+- **Endpoint Tested:** `GET /list/items` (authenticated resource)  
+- **Authentication:** JWT (access token valid through full test duration)  
+
+**Results:**
+- **Total API Calls:** ~22.5k requests  
+- **Success Rate:** 99.98% (only 4 transient connection resets)  
+- **Latency:**  
+  - Average: 162 ms  
+  - p95: 232 ms  
+  - Max: 777 ms (isolated outlier)  
+
+**Summary:**
+> API sustained 20 concurrent virtual users for 30 minutes (~22.5k requests) with 99.98% success rate and p95 latency <235 ms, showing no degradation in performance or stability.
+
 ---
 
 ## **How to Run the Tests**
@@ -122,10 +141,11 @@ Both tests are implemented in `k6` and included in the repo.
 
 - **backend/src/test/load_test.js** # Sustained load test
 - **backend/src/test/workflow_test.js** # Full CRUD workflow test
-
+- **backend/src/test/soak_test.js** # ~30min soak test
 
 **Run a Test:**
 From the backend root:
 ```bash
 k6 run src/test/load_test.js
 k6 run src/test/workflow_test.js
+k6 run src/test/soak_test.js
