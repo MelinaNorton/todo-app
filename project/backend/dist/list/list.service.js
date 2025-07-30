@@ -18,14 +18,18 @@ const user_service_1 = require("../users/user.service");
 const common_1 = require("@nestjs/common");
 const common_2 = require("@nestjs/common");
 const mongoose_2 = require("mongoose");
+const ioredis_1 = require("ioredis");
+const common_3 = require("@nestjs/common");
 let ListService = class ListService {
     userService;
     userModel;
     listModel;
-    constructor(userService, userModel, listModel) {
+    redis;
+    constructor(userService, userModel, listModel, redis) {
         this.userService = userService;
         this.userModel = userModel;
         this.listModel = listModel;
+        this.redis = redis;
     }
     async create(createListDto) {
         return await this.listModel.create(createListDto);
@@ -49,10 +53,16 @@ let ListService = class ListService {
     async getItems(filter) {
         await this.validateUser(filter.user_id);
         const user_id = filter.user_id;
+        const cacheKey = `list:${user_id}`;
+        const cached = await this.redis.get(cacheKey);
+        if (cached) {
+            return JSON.parse(cached);
+        }
         const found = await this.listModel.findOne({ user_id: user_id }).exec();
         if (!found) {
             throw new common_1.NotFoundException("No Lust found associated with User");
         }
+        await this.redis.set(cacheKey, JSON.stringify(found.list), 'EX', 60);
         return found.list;
     }
     async updateItem(filter, update) {
@@ -96,8 +106,10 @@ exports.ListService = ListService = __decorate([
     (0, common_2.Injectable)(),
     __param(1, (0, mongoose_1.InjectModel)('User')),
     __param(2, (0, mongoose_1.InjectModel)('List')),
+    __param(3, (0, common_3.Inject)('REDIS_CLIENT')),
     __metadata("design:paramtypes", [user_service_1.UserService,
         mongoose_2.Model,
-        mongoose_2.Model])
+        mongoose_2.Model,
+        ioredis_1.default])
 ], ListService);
 //# sourceMappingURL=list.service.js.map

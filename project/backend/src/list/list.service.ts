@@ -10,6 +10,8 @@ import { Model } from "mongoose";
 import { FilterToDoListDto } from "./dto/filtertodolist.dto";
 import { List } from "./interface/list.interface";
 import { CreateListDto } from "./dto/create-list.dto";
+import Redis from 'ioredis';
+import { Inject } from "@nestjs/common";
 
 @Injectable()
 export class ListService {
@@ -18,7 +20,8 @@ export class ListService {
         @InjectModel('User')  
         private readonly userModel : Model<User>,
         @InjectModel('List') 
-            private readonly listModel: Model <List>
+            private readonly listModel: Model <List>,
+        @Inject('REDIS_CLIENT') private redis: Redis
     ){}
 
     async create(createListDto:CreateListDto){
@@ -59,14 +62,23 @@ export class ListService {
         //extract the user_id for the find() operation below
         const user_id = filter.user_id
 
+        //check redis cache
+        const cacheKey = `list:${user_id}`;
+        const cached = await this.redis.get(cacheKey);
+
+        if (cached) {
+        return JSON.parse(cached); // Return cached list
+        }
+
         //find the list with the given user_id
-        const found = await this.listModel.findOne(
-            {user_id : user_id}
-        ).exec()
+        const found = await this.listModel.findOne({user_id : user_id}).exec()
 
         if(!found){
              throw new NotFoundException("No Lust found associated with User")
         }
+
+        //log result -> cache
+        await this.redis.set(cacheKey, JSON.stringify(found.list), 'EX', 60); // Cache for 60s
 
         //return the list[] associated with the returned List object
         return found.list

@@ -4,9 +4,10 @@ import { check, sleep } from 'k6';
 // Load stages
 export let options = {
   stages: [
-    { duration: '20s', target: 20 },
-    { duration: '30s', target: 50 },
-    { duration: '20s', target: 0 },
+    { duration: '10s', target: 20 },    // warm-up to 20 users
+    { duration: '5s', target: 200 },    // rapid spike to 200 users
+    { duration: '30s', target: 200 },   // sustain spike for 30 seconds
+    { duration: '10s', target: 0 },     // drop back to idle
   ],
 };
 

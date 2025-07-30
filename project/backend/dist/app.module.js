@@ -21,6 +21,7 @@ const throttler_1 = require("@nestjs/throttler");
 const throttler_storage_redis_1 = require("@nest-lab/throttler-storage-redis");
 const config_2 = require("@nestjs/config");
 const ioredis_1 = require("ioredis");
+const redis_module_1 = require("./Redis/redis.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -43,7 +44,7 @@ exports.AppModule = AppModule = __decorate([
                         await client.ping();
                         return {
                             throttlers: [
-                                { limit: 10, ttl: (0, throttler_1.seconds)(60) },
+                                { limit: Number.MAX_SAFE_INTEGER, ttl: (0, throttler_1.seconds)(60) },
                             ],
                             storage: new throttler_storage_redis_1.ThrottlerStorageRedisService(url),
                         };
@@ -61,7 +62,8 @@ exports.AppModule = AppModule = __decorate([
             user_module_1.UserModule,
             auth_module_1.AuthModule,
             list_module_1.ListModule,
-            tokens_module_1.TokensModule
+            tokens_module_1.TokensModule,
+            redis_module_1.RedisModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

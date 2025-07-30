@@ -7,11 +7,13 @@ import { Model } from "mongoose";
 import { FilterToDoListDto } from "./dto/filtertodolist.dto";
 import { List } from "./interface/list.interface";
 import { CreateListDto } from "./dto/create-list.dto";
+import Redis from 'ioredis';
 export declare class ListService {
     private readonly userService;
     private readonly userModel;
     private readonly listModel;
-    constructor(userService: UserService, userModel: Model<User>, listModel: Model<List>);
+    private redis;
+    constructor(userService: UserService, userModel: Model<User>, listModel: Model<List>, redis: Redis);
     create(createListDto: CreateListDto): Promise<import("mongoose").Document<unknown, {}, List, {}> & List & {
         _id: import("mongoose").Types.ObjectId;
     } & {

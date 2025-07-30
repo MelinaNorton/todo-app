@@ -15,7 +15,7 @@ import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 import { ThrottlerModuleOptions } from '@nestjs/throttler';
-
+import { RedisModule } from './Redis/redis.module';
 
 //defines the MongoDB connectuon uri & registers jwt as our PassPort middleware's strategy; also aknowledges the other main
 //modules within our progran, User & Auth and the App controller/provider
@@ -61,7 +61,8 @@ import { ThrottlerModuleOptions } from '@nestjs/throttler';
     UserModule,
     AuthModule,
     ListModule,
-    TokensModule
+    TokensModule,
+    RedisModule
   ],
   controllers: [AppController],
   providers: [AppService],
